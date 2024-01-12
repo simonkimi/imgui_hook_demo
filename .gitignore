@@ -34,5 +34,7 @@
 
 /.vs
 /cmake-build-debug-visual-studio
+/.xmake
+/build
 
 *.log

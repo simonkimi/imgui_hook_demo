@@ -76,6 +76,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 
     ImVec4 clear_color = ImVec4(0, 0, 0, 0);
 
+    auto &style = ImGui::GetStyle();
+    style.FrameRounding = 4.0;
+    style.WindowRounding = 4.0;
+    style.GrabRounding = 4.0;
+    style.PopupRounding = 4.0;
+    style.ScrollbarRounding = 4.0;
+    style.TabRounding = 4.0;
+
+    MainView view;
+
     // Main loop
     while (true) {
         // Poll and handle messages (inputs, window resize, etc.)
@@ -101,7 +111,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-        if (!create_view())
+        if (!view.render())
             break;
 
         // Rendering
