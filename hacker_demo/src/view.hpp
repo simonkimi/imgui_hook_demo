@@ -1,11 +1,12 @@
+#pragma once
+
 #include "imgui.h"
 
-export module View;
-
-export class MainView {
+class MainView {
 private:
     bool exit_ = false;
     bool is_display_demo_window_ = false;
+    ImGuiWindowFlags flags = ImGuiWindowFlags_MenuBar;
 
 private:
     void display_sub_window() {
@@ -13,8 +14,8 @@ private:
     }
 
 public:
-    bool render() {
-        if (!ImGui::Begin("Demo", nullptr, ImGuiWindowFlags_MenuBar)) {
+    bool render(){
+        if (!ImGui::Begin("Demo", nullptr, flags)) {
             ImGui::End();
             return false;
         }
@@ -37,8 +38,4 @@ public:
         ImGui::End();
         return !exit_;
     }
-
-
 };
-
-

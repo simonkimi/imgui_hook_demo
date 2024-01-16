@@ -6,4 +6,8 @@
       <file path="$PROJECT_DIR$/.vs" />
     </excludeRoots>
   </component>
+  <component name="XMakeProjectSettings">
+    <option name="currentArchitecture" value="x86" />
+    <option name="workingDirectory" value="$PROJECT_DIR$" />
+  </component>
 </project>
