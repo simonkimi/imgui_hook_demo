@@ -72,7 +72,7 @@ ImguiController::ImguiController() {
 }
 
 
-bool ImguiController::loop(const std::function<bool()>& render) {
+bool ImguiController::Loop(const std::function<bool()>& render) {
     MSG msg;
     while (::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE)) {
         ::TranslateMessage(&msg);

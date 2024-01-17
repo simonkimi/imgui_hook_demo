@@ -1,6 +1,6 @@
 ﻿find_package(imgui CONFIG REQUIRED)
 
-project("windows_demo")
+project("ui_demo")
 
 file(GLOB_RECURSE SOURCE_FILES "src/*.h" "src/*.cpp" "src/*.hpp")
 file(GLOB_RECURSE IMGUI_SOURCE_FILES "lib/imgui_impl/*.h" "lib/imgui_impl/*.cpp")

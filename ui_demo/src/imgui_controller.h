@@ -16,7 +16,7 @@ public:
 
     ~ImguiController();
 
-    bool loop(const std::function<bool()> &render);
+    bool Loop(const std::function<bool()> &render);
     
 private:
     WNDCLASSEXW *wc_;

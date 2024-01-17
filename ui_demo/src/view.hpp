@@ -9,12 +9,12 @@ private:
     ImGuiWindowFlags flags = ImGuiWindowFlags_MenuBar;
 
 private:
-    void display_sub_window() {
+    void DisplaySubWindow() {
         if (is_display_demo_window_) ImGui::ShowDemoWindow(&is_display_demo_window_);
     }
 
 public:
-    bool render(){
+    bool Render(){
         if (!ImGui::Begin("Demo", nullptr, flags)) {
             ImGui::End();
             return false;
@@ -34,7 +34,7 @@ public:
             ImGui::EndMenuBar();
         }
 
-        display_sub_window();
+        DisplaySubWindow();
         ImGui::End();
         return !exit_;
     }

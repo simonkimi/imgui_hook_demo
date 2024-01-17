@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.28)
+﻿cmake_minimum_required(VERSION 3.27)
 
 if (POLICY CMP0141)
     cmake_policy(SET CMP0141 NEW)
@@ -11,6 +11,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake;${CMAKE_MODULE_PATH}")
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
-project("hacker_demo")
+project("ui_demo")
 
-add_subdirectory("hacker_demo")
+add_subdirectory("ui_demo")
+add_subdirectory("dll_injector")
