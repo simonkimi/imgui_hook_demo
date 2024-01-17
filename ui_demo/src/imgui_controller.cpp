@@ -219,3 +219,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     }
     return ::DefWindowProcW(hWnd, msg, wParam, lParam);
 }
+
+HWND__ *ImguiController::GetHwnd() {
+    return hwnd_;
+}

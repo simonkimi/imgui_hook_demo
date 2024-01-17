@@ -2,7 +2,7 @@
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow) {
     auto controller = new ImguiController();
-    auto view = new MainView();
+    auto view = new MainView(controller->GetHwnd());
     while (controller->Loop([&view] { return view->Render(); }));
     delete view;
     delete controller;
