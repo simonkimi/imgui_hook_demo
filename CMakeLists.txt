@@ -6,6 +6,8 @@ if (POLICY CMP0141)
 endif ()
 
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_FLAGS_DEBUG "-O0")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake;${CMAKE_MODULE_PATH}")
 
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
@@ -16,4 +18,4 @@ add_definitions("-DUNICODE" "-D_UNICODE")
 project("ui_demo")
 
 add_subdirectory("ui_demo")
-add_subdirectory("dll_injector")
+add_subdirectory("win32_helper")

@@ -32,6 +32,8 @@
 *.app
 *.txt
 
+!CMakeLists.txt
+
 /.vs
 /cmake-build-debug-visual-studio
 /.xmake

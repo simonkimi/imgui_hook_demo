@@ -1,4 +1,4 @@
-#include "main.h"
+#include "../include/dll_injector.h"
 
 DWORD FindProcessById(LPCTSTR process_name) {
     PROCESSENTRY32 pe32;
