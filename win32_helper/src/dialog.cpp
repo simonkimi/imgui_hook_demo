@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-bool OpenFileDialog(HWND__ *hwnd, TCHAR *filePath, DWORD size) {
+bool OpenFileDialog(HWND hwnd, LPTSTR filePath, DWORD size) {
     OPENFILENAME ofn;
     ZeroMemory(&ofn, sizeof(ofn));
 

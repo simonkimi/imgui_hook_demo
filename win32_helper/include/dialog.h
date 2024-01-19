@@ -4,4 +4,4 @@
 #include <memory>
 
 
-bool OpenFileDialog(HWND__ *hwnd, OUT wchar_t *filePath, DWORD size);
+bool OpenFileDialog(HWND hwnd, OUT LPTSTR filePath, DWORD size);

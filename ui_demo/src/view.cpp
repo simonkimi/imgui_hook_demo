@@ -43,5 +43,5 @@ bool MainView::Render() {
     return open_;
 }
 
-MainView::MainView(HWND__ *hwnd) : hwnd_(hwnd) {
+MainView::MainView(HWND hwnd) : hwnd_(hwnd) {
 }

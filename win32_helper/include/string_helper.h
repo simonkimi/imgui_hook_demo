@@ -4,4 +4,4 @@
 #include <memory>
 
 
-void TCharToCChar(IN TCHAR tchar[], int size, OUT char *cchar);
+void TCharToCChar(IN LPTSTR tchar, int size, OUT char *cchar);

@@ -18,10 +18,10 @@ public:
 
     bool Loop(const std::function<bool()> &render);
 
-    HWND__ *GetHwnd();
+    HWND GetHwnd();
 
 private:
     WNDCLASSEXW wc_;
-    HWND__ *hwnd_;
+    HWND hwnd_;
     ImVec4 clear_color_;
 };
