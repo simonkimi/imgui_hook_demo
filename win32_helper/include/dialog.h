@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include <optional>
 #include <string>
+#include <memory>
 
 
-std::optional<std::string> OpenFileDialog(HWND__ *hwnd);
+std::unique_ptr<std::string> OpenFileDialog(HWND__ *hwnd);

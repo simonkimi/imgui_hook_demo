@@ -20,23 +20,24 @@ void CleanupRenderTarget();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 
-ImguiController::ImguiController() {
-    wc_ = new WNDCLASSEXW{sizeof(WNDCLASSEXW), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr,
-                          nullptr,
-                          nullptr, L"ImGui Example", nullptr};
+ImguiController::ImguiController() : wc_(
+        WNDCLASSEXW{sizeof(wc_), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr,
+                    nullptr,
+                    nullptr, L"ImGui Example", nullptr}
+) {
 
-    ::RegisterClassExW(wc_);
+    ::RegisterClassExW(&wc_);
 
     int width = ::GetSystemMetrics(SM_CXSCREEN);
     int height = ::GetSystemMetrics(SM_CYSCREEN);
 
-    hwnd_ = ::CreateWindowExW(WS_EX_LAYERED, wc_->lpszClassName, L"Dear ImGui DirectX11 Example", WS_POPUP, 0, 0,
-                              width, height, nullptr, nullptr, wc_->hInstance, nullptr);
+    hwnd_ = ::CreateWindowExW(WS_EX_LAYERED, wc_.lpszClassName, L"Dear ImGui DirectX11 Example", WS_POPUP, 0, 0,
+                              width, height, nullptr, nullptr, wc_.hInstance, nullptr);
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd_)) {
         CleanupDeviceD3D();
-        ::UnregisterClassW(wc_->lpszClassName, wc_->hInstance);
+        ::UnregisterClassW(wc_.lpszClassName, wc_.hInstance);
         throw std::runtime_error("CreateDeviceD3D failed");
     }
 
@@ -62,6 +63,8 @@ ImguiController::ImguiController() {
     io.Fonts->AddFontFromFileTTF(R"(c:\Windows\Fonts\msyh.ttc)", 18.0f, nullptr,
                                  io.Fonts->GetGlyphRangesChineseFull());
 
+    clear_color_ = ImVec4(0, 0, 0, 0);
+
     auto &style = ImGui::GetStyle();
     style.FrameRounding = 4.0;
     style.WindowRounding = 4.0;
@@ -72,7 +75,7 @@ ImguiController::ImguiController() {
 }
 
 
-bool ImguiController::Loop(const std::function<bool()>&  render) {
+bool ImguiController::Loop(const std::function<bool()> &render) {
     MSG msg;
     while (::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE)) {
         ::TranslateMessage(&msg);
@@ -98,8 +101,8 @@ bool ImguiController::Loop(const std::function<bool()>&  render) {
 
     // Rendering
     ImGui::Render();
-    const float clear_color_with_alpha[4] = {clear_color_->x * clear_color_->w, clear_color_->y * clear_color_->w,
-                                             clear_color_->z * clear_color_->w, clear_color_->w};
+    const float clear_color_with_alpha[4] = {clear_color_.x * clear_color_.w, clear_color_.y * clear_color_.w,
+                                             clear_color_.z * clear_color_.w, clear_color_.w};
     g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
     g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -117,10 +120,7 @@ ImguiController::~ImguiController() {
 
     CleanupDeviceD3D();
     ::DestroyWindow(hwnd_);
-    ::UnregisterClassW(wc_->lpszClassName, wc_->hInstance);
-    
-    delete wc_;
-    delete clear_color_;
+    ::UnregisterClassW(wc_.lpszClassName, wc_.hInstance);
 }
 
 

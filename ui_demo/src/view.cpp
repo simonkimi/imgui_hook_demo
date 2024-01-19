@@ -26,15 +26,13 @@ bool MainView::Render() {
     }
 
     if (ImGui::Button("打开Dll")) {
-        auto path = OpenFileDialog(hwnd_);
-        if (path.has_value()) {
-            dll_path_ = path.value();
-        } else {
-            dll_path_ = "";
+        auto new_path = OpenFileDialog(hwnd_);
+        if (new_path != nullptr) {
+            dll_path_ = std::move(new_path);
         }
     }
-    
-    ImGui::Text("Dll路径: %s", dll_path_.c_str());
+
+    ImGui::Text("Dll路径: %s", dll_path_ != nullptr ? dll_path_->c_str() : "请选择一个路径");
 
 
     DisplaySubWindow();

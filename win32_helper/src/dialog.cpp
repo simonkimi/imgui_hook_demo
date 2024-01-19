@@ -2,7 +2,7 @@
 #include "../include/dialog.h"
 #include <iostream>
 
-std::optional<std::string> OpenFileDialog(HWND__ *hwnd) {
+std::unique_ptr<std::string> OpenFileDialog(HWND__ *hwnd) {
     OPENFILENAME ofn;
     wchar_t szFile[MAX_PATH];
     ZeroMemory(&ofn, sizeof(OPENFILENAME));
@@ -20,8 +20,8 @@ std::optional<std::string> OpenFileDialog(HWND__ *hwnd) {
     
     if (::GetOpenFileName(&ofn)) {
         char str[MAX_PATH] = {0};
-        WideCharToMultiByte(CP_ACP, 0, szFile, -1, str, MAX_PATH, NULL, NULL);
-        return std::string(str);
+        WideCharToMultiByte(CP_ACP, 0, szFile, -1, str, MAX_PATH, nullptr, nullptr);
+        return std::make_unique<std::string>(str);
     }
-    return std::nullopt;
+    return nullptr;
 }

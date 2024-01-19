@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.27)
+﻿cmake_minimum_required(VERSION 3.20)
 
 if (POLICY CMP0141)
     cmake_policy(SET CMP0141 NEW)
@@ -6,7 +6,6 @@ if (POLICY CMP0141)
 endif ()
 
 set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_FLAGS_DEBUG "-O0")
 set(CMAKE_CXX_FLAGS_RELEASE "-O2")
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake;${CMAKE_MODULE_PATH}")
 

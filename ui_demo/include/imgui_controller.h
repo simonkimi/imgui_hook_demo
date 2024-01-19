@@ -19,9 +19,9 @@ public:
     bool Loop(const std::function<bool()> &render);
 
     HWND__ *GetHwnd();
-    
+
 private:
-    WNDCLASSEXW *wc_;
+    WNDCLASSEXW wc_;
     HWND__ *hwnd_;
-    ImVec4 *clear_color_ = new ImVec4(0, 0, 0, 0);
+    ImVec4 clear_color_;
 };

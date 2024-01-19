@@ -1,9 +1,10 @@
 #pragma once
 
+#include <memory>
 #include <tchar.h>
 #include "imgui.h"
 #include "Windows.h"
-#include "../../win32_helper/include//dialog.h"
+#include "../../win32_helper/include/dialog.h"
 
 class MainView {
 private:
@@ -12,7 +13,7 @@ private:
     ImGuiWindowFlags flags = ImGuiWindowFlags_MenuBar;
     HWND__ *hwnd_;
     
-    std::string dll_path_;
+    std::unique_ptr<std::string> dll_path_;
     
     void DisplaySubWindow();
 
