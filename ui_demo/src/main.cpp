@@ -9,6 +9,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
             break;
         }
     }
-    
+
     return 0;
 }

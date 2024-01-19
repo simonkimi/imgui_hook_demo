@@ -1,4 +1,5 @@
 #include "../include/view.h"
+#include "../../win32_helper/include/string_helper.h"
 
 
 void MainView::DisplaySubWindow() {
@@ -26,14 +27,16 @@ bool MainView::Render() {
     }
 
     if (ImGui::Button("打开Dll")) {
-        auto new_path = OpenFileDialog(hwnd_);
-        if (new_path != nullptr) {
-            dll_path_ = std::move(new_path);
+        TCHAR new_path[MAX_PATH] = {0};
+        auto has_new = OpenFileDialog(hwnd_, new_path, sizeof(new_path));
+        if (has_new) {
+            std::unique_ptr<char[]> buffer(new char[MAX_PATH]);
+            TCharToCChar(new_path, MAX_PATH, buffer.get());
+            dll_path_ = std::move(buffer);
         }
     }
 
-    ImGui::Text("Dll路径: %s", dll_path_ != nullptr ? dll_path_->c_str() : "请选择一个路径");
-
+    ImGui::Text("Dll路径: %s", dll_path_ != nullptr ? dll_path_.get() : "请选择一个路径");
 
     DisplaySubWindow();
     ImGui::End();

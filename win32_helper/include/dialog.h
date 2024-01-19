@@ -1,9 +1,7 @@
 #pragma once
 
 #include "stdafx.h"
-#include <optional>
-#include <string>
 #include <memory>
 
 
-std::unique_ptr<std::string> OpenFileDialog(HWND__ *hwnd);
+bool OpenFileDialog(HWND__ *hwnd, OUT wchar_t *filePath, DWORD size);

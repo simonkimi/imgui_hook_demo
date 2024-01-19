@@ -14,7 +14,7 @@ add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 add_definitions("-DUNICODE" "-D_UNICODE")
 
-project("ui_demo")
+project("hacker_demo")
 
 add_subdirectory("ui_demo")
 add_subdirectory("win32_helper")
