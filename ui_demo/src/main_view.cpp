@@ -1,4 +1,4 @@
-#include "../include/view.h"
+#include "../include/main_view.h"
 #include "../../win32_helper/include/string_helper.h"
 
 
