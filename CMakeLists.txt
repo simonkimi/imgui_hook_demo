@@ -16,5 +16,6 @@ add_definitions("-DUNICODE" "-D_UNICODE")
 
 project("hacker_demo")
 
+add_subdirectory("runner")
 add_subdirectory("ui_demo")
 add_subdirectory("win32_helper")

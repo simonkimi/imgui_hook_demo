@@ -6,9 +6,12 @@
 #include <list>
 #include "string_helper.h"
 
+namespace DllInjector {
+    DWORD FindProcessById(LPCTSTR process_name);
 
-DWORD FindProcessById(LPCTSTR process_name);
+    bool CreateRemoteThreadInjectDll(DWORD pid, LPCTSTR dll_path);
 
-bool CreateRemoteThreadInjectDll(DWORD pid, LPCTSTR dll_path);
+    std::list<std::tuple<DWORD, tstring>> GetProcessList();
+}
 
-std::list<std::tuple<DWORD, tstring>> GetProcessList();
+

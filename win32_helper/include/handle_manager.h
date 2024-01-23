@@ -15,12 +15,12 @@ public:
 
     HandleManager &operator=(HandleManager &&other) noexcept = default;
 
+    ~HandleManager();
+
     [[nodiscard]] HANDLE get() const;
 
     [[nodiscard]] bool IsInvalid() const;
 
 private:
-    std::unique_ptr<std::remove_pointer<HANDLE>::type, void (*)(HANDLE)> handle_;
-
-    static void CloseHandle(HANDLE handle);
+    HANDLE handle_;
 };

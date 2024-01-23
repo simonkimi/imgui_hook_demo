@@ -1,7 +1,7 @@
 #include "../include/dll_injector.h"
 #include "../include/handle_manager.h"
 
-DWORD FindProcessById(LPCTSTR process_name) {
+DWORD DllInjector::FindProcessById(LPCTSTR process_name) {
     PROCESSENTRY32 pe32;
     pe32.dwSize = sizeof(PROCESSENTRY32);
     HandleManager hSnapshot(::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL));
@@ -20,7 +20,7 @@ DWORD FindProcessById(LPCTSTR process_name) {
     return -1;
 }
 
-bool CreateRemoteThreadInjectDll(DWORD pid, LPCTSTR dll_path) {
+bool DllInjector::CreateRemoteThreadInjectDll(DWORD pid, LPCTSTR dll_path) {
     // 打开注入进程
 
     HandleManager hProcess(::OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid));
@@ -65,7 +65,7 @@ bool CreateRemoteThreadInjectDll(DWORD pid, LPCTSTR dll_path) {
     return true;
 }
 
-std::list<std::tuple<DWORD, tstring>> GetProcessList() {
+std::list<std::tuple<DWORD, tstring>> DllInjector::GetProcessList() {
     PROCESSENTRY32 pe32;
     std::list<std::tuple<DWORD, tstring>> process_list;
 
