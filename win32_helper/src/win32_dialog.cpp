@@ -3,7 +3,7 @@
 #include <iostream>
 
 
-bool Win32Helper::OpenFileDialog(HWND hwnd, LPTSTR filePath, DWORD size) {
+bool win32::OpenFileDialog(HWND hwnd, LPTSTR filePath, DWORD size) {
     OPENFILENAME ofn;
     ZeroMemory(&ofn, sizeof(ofn));
 

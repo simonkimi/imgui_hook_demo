@@ -3,24 +3,28 @@
 #include <memory>
 #include "stdafx.h"
 
-class HandleManager {
-public:
-    explicit HandleManager(HANDLE handle);
+namespace win32 {
 
-    HandleManager(const HandleManager &) = delete;
+    class HandleManager {
+    public:
+        explicit HandleManager(HANDLE handle);
 
-    HandleManager &operator=(const HandleManager &) = delete;
+        HandleManager(const HandleManager &) = delete;
 
-    HandleManager(HandleManager &&other) noexcept = default;
+        HandleManager &operator=(const HandleManager &) = delete;
 
-    HandleManager &operator=(HandleManager &&other) noexcept = default;
+        HandleManager(HandleManager &&other) noexcept = default;
 
-    ~HandleManager();
+        HandleManager &operator=(HandleManager &&other) noexcept = default;
 
-    [[nodiscard]] HANDLE get() const;
+        ~HandleManager();
 
-    [[nodiscard]] bool IsInvalid() const;
+        [[nodiscard]] HANDLE get() const;
 
-private:
-    HANDLE handle_;
-};
+        [[nodiscard]] bool IsInvalid() const;
+
+    private:
+        HANDLE handle_;
+    };
+
+}

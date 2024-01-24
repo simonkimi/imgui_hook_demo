@@ -22,10 +22,10 @@ bool MainView::Render() {
 
     if (ImGui::Button("打开Dll")) {
         TCHAR new_path[MAX_PATH] = {0};
-        auto has_new = Win32Helper::OpenFileDialog(hwnd_, new_path, sizeof(new_path));
+        auto has_new = win32::OpenFileDialog(hwnd_, new_path, sizeof(new_path));
         if (has_new) {
             std::unique_ptr<char[]> buffer(new char[MAX_PATH]);
-            TCharToCChar(new_path, MAX_PATH, buffer.get());
+            win32::TCharToCChar(new_path, MAX_PATH, buffer.get());
             dll_path_ = std::move(buffer);
         }
     }

@@ -4,6 +4,6 @@
 #include <memory>
 
 
-namespace Win32Helper {
+namespace win32 {
     bool OpenFileDialog(HWND hwnd, OUT LPTSTR filePath, DWORD size);
 }

@@ -1,7 +1,7 @@
 #include "process_helper.h"
 #include "handle_manager.h"
 
-DWORD Win32Helper::FindProcessById(LPCTSTR process_name) {
+DWORD win32::FindProcessById(LPCTSTR process_name) {
     PROCESSENTRY32 pe32;
     pe32.dwSize = sizeof(PROCESSENTRY32);
     HandleManager hSnapshot(::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL));
@@ -20,7 +20,7 @@ DWORD Win32Helper::FindProcessById(LPCTSTR process_name) {
     return -1;
 }
 
-bool Win32Helper::CreateRemoteThreadInjectDll(DWORD pid, LPCTSTR dll_path) {
+bool win32::CreateRemoteThreadInjectDll(DWORD pid, LPCTSTR dll_path) {
     // 打开注入进程
 
     HandleManager hProcess(::OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid));
@@ -65,7 +65,7 @@ bool Win32Helper::CreateRemoteThreadInjectDll(DWORD pid, LPCTSTR dll_path) {
     return true;
 }
 
-std::list<std::tuple<DWORD, tstring>> Win32Helper::GetProcessList() {
+std::list<std::tuple<DWORD, win32::tstring>> win32::GetProcessList() {
     PROCESSENTRY32 pe32;
     std::list<std::tuple<DWORD, tstring>> process_list;
 

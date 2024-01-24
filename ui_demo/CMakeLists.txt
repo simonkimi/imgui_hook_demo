@@ -3,7 +3,7 @@
 project("ui_demo")
 
 file(GLOB_RECURSE SOURCE_FILES "src/*.cpp")
-file(GLOB_RECURSE IMGUI_SOURCE_FILES "lib/imgui_impl/*.h" "lib/imgui_impl/*.cpp")
+file(GLOB_RECURSE IMGUI_SOURCE_FILES "lib/*.h" "lib/*.cpp")
 
 include_directories(include)
 include_directories(${CMAKE_SOURCE_DIR}/win32_helper/include)
