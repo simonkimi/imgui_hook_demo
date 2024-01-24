@@ -7,11 +7,11 @@
 #include "string_helper.h"
 
 namespace win32 {
-    DWORD FindProcessById(LPCTSTR process_name);
+DWORD FindProcessById(LPCTSTR process_name);
 
-    bool CreateRemoteThreadInjectDll(DWORD pid, LPCTSTR dll_path);
+bool CreateRemoteThreadInjectDll(DWORD pid, LPCTSTR dll_path);
 
-    std::list<std::tuple<DWORD, win32::tstring>> GetProcessList();
+std::list<std::tuple<DWORD, win32::tstring>> GetProcessList();
 }
 
 

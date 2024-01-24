@@ -5,26 +5,26 @@
 
 namespace win32 {
 
-    class HandleManager {
-    public:
-        explicit HandleManager(HANDLE handle);
+class HandleManager {
+public:
+    explicit HandleManager(HANDLE handle);
 
-        HandleManager(const HandleManager &) = delete;
+    HandleManager(const HandleManager &) = delete;
 
-        HandleManager &operator=(const HandleManager &) = delete;
+    HandleManager &operator=(const HandleManager &) = delete;
 
-        HandleManager(HandleManager &&other) noexcept = default;
+    HandleManager(HandleManager &&other) noexcept = default;
 
-        HandleManager &operator=(HandleManager &&other) noexcept = default;
+    HandleManager &operator=(HandleManager &&other) noexcept = default;
 
-        ~HandleManager();
+    ~HandleManager();
 
-        [[nodiscard]] HANDLE get() const;
+    [[nodiscard]] HANDLE get() const;
 
-        [[nodiscard]] bool IsInvalid() const;
+    [[nodiscard]] bool IsInvalid() const;
 
-    private:
-        HANDLE handle_;
-    };
+private:
+    HANDLE handle_;
+};
 
 }

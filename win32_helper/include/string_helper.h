@@ -7,7 +7,7 @@
 
 
 namespace win32 {
-    using tstring = std::basic_string<TCHAR>;
+using tstring = std::basic_string<TCHAR>;
 
-    void TCharToCChar(IN LPTSTR tchar, int size, OUT char *cchar);
+void TCharToCChar(IN LPTSTR tchar, int size, OUT char *cchar);
 }

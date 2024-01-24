@@ -5,5 +5,7 @@
 
 
 namespace win32 {
-    bool OpenFileDialog(HWND hwnd, OUT LPTSTR filePath, DWORD size);
+
+bool OpenFileDialog(HWND hwnd, OUT LPTSTR filePath, DWORD size);
+
 }
