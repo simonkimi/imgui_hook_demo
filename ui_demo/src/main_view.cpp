@@ -21,12 +21,9 @@ bool MainView::Render() {
     }
 
     if (ImGui::Button("打开Dll")) {
-        TCHAR new_path[MAX_PATH] = {0};
-        auto has_new = win32::OpenFileDialog(hwnd_, new_path, sizeof(new_path));
-        if (has_new) {
-            std::unique_ptr<char[]> buffer(new char[MAX_PATH]);
-            win32::TCharToCChar(new_path, MAX_PATH, buffer.get());
-            dll_path_ = std::move(buffer);
+        auto new_path = win32::OpenFileDialog(hwnd_, L"DLL文件\0*.dll\0All Files\0*.*\0");
+        if (new_path.has_value()) {
+            dll_path_ = win32::TCharToCChar(new_path.value());
         }
     }
 
