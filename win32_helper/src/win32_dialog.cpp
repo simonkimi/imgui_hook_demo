@@ -1,9 +1,9 @@
 
-#include "../include/dialog.h"
+#include "win32_dialog.h"
 #include <iostream>
 
 
-bool OpenFileDialog(HWND hwnd, LPTSTR filePath, DWORD size) {
+bool Win32Helper::OpenFileDialog(HWND hwnd, LPTSTR filePath, DWORD size) {
     OPENFILENAME ofn;
     ZeroMemory(&ofn, sizeof(ofn));
 

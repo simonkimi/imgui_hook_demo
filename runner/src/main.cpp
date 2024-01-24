@@ -1,8 +1,8 @@
 #include "iostream"
-#include "../../win32_helper/include/dll_injector.h"
+#include "process_helper.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow) {
-    auto process_list = DllInjector::GetProcessList();
+    auto process_list = Win32Helper::GetProcessList();
     for (auto &process: process_list) {
         DWORD pid;
         tstring process_name;

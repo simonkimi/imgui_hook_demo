@@ -4,7 +4,7 @@
 #include "imgui.h"
 #include "Windows.h"
 #include "view_base.h"
-#include "../../win32_helper/include/dialog.h"
+#include "win32_dialog.h"
 
 class MainView : public IView {
 private:

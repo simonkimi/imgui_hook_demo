@@ -1,4 +1,4 @@
-﻿#include "../include/main.h"
+﻿#include "main.h"
 #include <memory>
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, int nCmdShow) {

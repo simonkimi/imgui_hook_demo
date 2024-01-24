@@ -1,4 +1,4 @@
-#include "../include/string_helper.h"
+#include "string_helper.h"
 
 
 void TCharToCChar(IN LPTSTR tchar, int size, OUT char *cchar) {
