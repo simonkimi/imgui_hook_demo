@@ -1,0 +1,7 @@
+{
+  "name": "hacker-demo-dep",
+  "version": "1.0.0",
+  "dependencies": [
+    "imgui"
+  ]
+}
