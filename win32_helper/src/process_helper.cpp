@@ -58,9 +58,12 @@ bool win32::CreateRemoteThreadInjectDll(DWORD pid, LPCTSTR dll_path) {
             0,
             nullptr
     ));
-    if (thread_handle.get() == nullptr) {
+    if (thread_handle.IsInvalid()) {
         return false;
     }
+
+    WaitForSingleObject(thread_handle.get(), INFINITE);
+    VirtualFreeEx(hProcess.get(), dll_addr, dll_size, MEM_DECOMMIT);
 
     return true;
 }
