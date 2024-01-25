@@ -1,4 +1,4 @@
-#include "main_view.h"
+#include "../include/main_view.h"
 #include "string_helper.h"
 
 
@@ -6,7 +6,7 @@ void MainView::DisplaySubWindow() {
     if (is_display_demo_window_) ImGui::ShowDemoWindow(&is_display_demo_window_);
 }
 
-bool MainView::Render() {
+bool MainView::Render(HWND hwnd) {
     if (!ImGui::Begin("测试程序", &open_, flags)) {
         ImGui::End();
         return open_;
@@ -21,7 +21,7 @@ bool MainView::Render() {
     }
 
     if (ImGui::Button("打开Dll")) {
-        auto new_path = win32::OpenFileDialog(hwnd_, L"DLL文件\0*.dll\0All Files\0*.*\0");
+        auto new_path = win32::OpenFileDialog(hwnd, L"DLL文件\0*.dll\0All Files\0*.*\0");
         if (new_path.has_value()) {
             dll_path_ = win32::TCharToCChar(new_path.value());
         }
@@ -34,5 +34,3 @@ bool MainView::Render() {
     return open_;
 }
 
-MainView::MainView(HWND hwnd) : hwnd_(hwnd) {
-}
