@@ -17,8 +17,8 @@ add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
 add_definitions("-DUNICODE" "-D_UNICODE")
 
-
+add_subdirectory("imgui_standalone")
+add_subdirectory("imgui_hook")
 add_subdirectory("win32_helper")
-add_subdirectory("imgui_wrapper")
 add_subdirectory("injected_dll")
 add_subdirectory("qt_windows")

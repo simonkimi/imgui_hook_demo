@@ -2,6 +2,13 @@
   "name": "hacker-demo-dep",
   "version": "1.0.0",
   "dependencies": [
-    "imgui"
+    {
+      "name": "detours",
+      "version>=": "4.0.1#8"
+    },
+    {
+      "name": "imgui",
+      "version>=": "1.90#3"
+    }
   ]
 }
