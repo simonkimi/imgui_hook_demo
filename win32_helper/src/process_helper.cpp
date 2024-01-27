@@ -68,9 +68,9 @@ bool win32::CreateRemoteThreadInjectDll(DWORD pid, LPCTSTR dll_path) {
     return true;
 }
 
-std::list<std::tuple<DWORD, win32::tstring>> win32::GetProcessList() {
+std::list<std::pair<DWORD, win32::tstring>> win32::GetProcessList() {
     PROCESSENTRY32 pe32;
-    std::list<std::tuple<DWORD, tstring>> process_list;
+    std::list<std::pair<DWORD, tstring>> process_list;
 
     pe32.dwSize = sizeof(PROCESSENTRY32);
     HandleManager hSnapshot(::CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL));

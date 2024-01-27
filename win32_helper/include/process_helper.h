@@ -11,7 +11,7 @@ DWORD FindProcessById(LPCTSTR process_name);
 
 bool CreateRemoteThreadInjectDll(DWORD pid, LPCTSTR dll_path);
 
-std::list<std::tuple<DWORD, win32::tstring>> GetProcessList();
+std::list<std::pair<DWORD, win32::tstring>> GetProcessList();
 }
 
 
