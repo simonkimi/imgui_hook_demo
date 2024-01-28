@@ -1,4 +1,5 @@
 #include "string_helper.h"
+#include "Windows.h"
 
 
 std::unique_ptr<char[]> win32::TCharToCChar(tstring &tstring)

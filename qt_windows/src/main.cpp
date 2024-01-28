@@ -1,6 +1,8 @@
 #include <QApplication>
 #include "ui/main_window.h"
 
+import raii;
+
 
 int main(int argc, char *argv[])
 {

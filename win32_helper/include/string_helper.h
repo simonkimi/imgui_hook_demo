@@ -1,7 +1,6 @@
 #pragma once
 
-#include "stdafx.h"
-#include <iostream>
+#include "pch.h"
 #include <memory>
 #include <string>
 
