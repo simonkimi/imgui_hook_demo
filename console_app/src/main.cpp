@@ -2,7 +2,8 @@
 
 #define UNUSED [[maybe_unused]]
 
-int main(UNUSED int argc, UNUSED  char *argv[]) {
+int main(UNUSED int argc, UNUSED  char *argv[])
+{
     auto process_list = win32::GetProcessList();
     for (const auto &[pid, process]: process_list) {
         std::wcout << std::format(L"pid: {}, process: {}", pid, process) << std::endl;

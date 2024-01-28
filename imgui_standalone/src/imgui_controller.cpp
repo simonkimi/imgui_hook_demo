@@ -24,7 +24,8 @@ ImguiController::ImguiController() : wc_(
         WNDCLASSEXW{sizeof(wc_), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr,
                     nullptr,
                     nullptr, L"ImGui Example", nullptr}
-) {
+)
+{
 
     ::RegisterClassExW(&wc_);
 
@@ -75,7 +76,8 @@ ImguiController::ImguiController() : wc_(
 }
 
 
-bool ImguiController::Loop(const std::function<bool()> &render) {
+bool ImguiController::Loop(const std::function<bool()> &render)
+{
     MSG msg;
     while (::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE)) {
         ::TranslateMessage(&msg);
@@ -113,7 +115,8 @@ bool ImguiController::Loop(const std::function<bool()> &render) {
 }
 
 
-ImguiController::~ImguiController() {
+ImguiController::~ImguiController()
+{
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
@@ -124,7 +127,8 @@ ImguiController::~ImguiController() {
 }
 
 
-bool CreateDeviceD3D(HWND hWnd) {
+bool CreateDeviceD3D(HWND hWnd)
+{
     // Setup swap chain
     DXGI_SWAP_CHAIN_DESC sd;
     ZeroMemory(&sd, sizeof(sd));
@@ -160,7 +164,8 @@ bool CreateDeviceD3D(HWND hWnd) {
     return true;
 }
 
-void CleanupDeviceD3D() {
+void CleanupDeviceD3D()
+{
     CleanupRenderTarget();
     if (g_pSwapChain) {
         g_pSwapChain->Release();
@@ -176,14 +181,16 @@ void CleanupDeviceD3D() {
     }
 }
 
-void CreateRenderTarget() {
+void CreateRenderTarget()
+{
     ID3D11Texture2D *pBackBuffer;
     g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
     g_pd3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &g_mainRenderTargetView);
     pBackBuffer->Release();
 }
 
-void CleanupRenderTarget() {
+void CleanupRenderTarget()
+{
     if (g_mainRenderTargetView) {
         g_mainRenderTargetView->Release();
         g_mainRenderTargetView = nullptr;
@@ -198,7 +205,8 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
 // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
 // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
     if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
         return true;
 
@@ -220,6 +228,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     return ::DefWindowProcW(hWnd, msg, wParam, lParam);
 }
 
-HWND ImguiController::GetHwnd() {
+HWND ImguiController::GetHwnd()
+{
     return hwnd_;
 }

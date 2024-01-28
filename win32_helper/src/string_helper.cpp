@@ -1,7 +1,8 @@
 #include "string_helper.h"
 
 
-std::unique_ptr<char[]> win32::TCharToCChar(tstring &tstring) {
+std::unique_ptr<char[]> win32::TCharToCChar(tstring &tstring)
+{
     if (tstring.empty()) {
         return nullptr;
     }

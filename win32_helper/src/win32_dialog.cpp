@@ -3,7 +3,8 @@
 #include <iostream>
 
 
-bool win32::OpenFileDialog(HWND hwnd, LPTSTR filePath, DWORD size) {
+bool win32::OpenFileDialog(HWND hwnd, LPTSTR filePath, DWORD size)
+{
     OPENFILENAME ofn;
     ZeroMemory(&ofn, sizeof(ofn));
 
@@ -17,12 +18,13 @@ bool win32::OpenFileDialog(HWND hwnd, LPTSTR filePath, DWORD size) {
     ofn.nMaxFileTitle = 0;
     ofn.lpstrInitialDir = nullptr;
     ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-    
+
     return GetOpenFileName(&ofn);
 }
 
 
-std::optional<win32::tstring> win32::OpenFileDialog(HWND hwnd, LPCTSTR filter) {
+std::optional<win32::tstring> win32::OpenFileDialog(HWND hwnd, LPCTSTR filter)
+{
     OPENFILENAME ofn;
     ZeroMemory(&ofn, sizeof(ofn));
     TCHAR filePath[MAX_PATH] = {0};
@@ -37,7 +39,7 @@ std::optional<win32::tstring> win32::OpenFileDialog(HWND hwnd, LPCTSTR filter) {
     ofn.nMaxFileTitle = 0;
     ofn.lpstrInitialDir = nullptr;
     ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-    
+
     if (GetOpenFileName(&ofn)) {
         return win32::tstring(filePath);
     }

@@ -4,7 +4,8 @@
 #include <QStandardItemModel>
 
 
-void MainWindow::OnRefreshClicked() const {
+void MainWindow::OnRefreshClicked() const
+{
     auto thread = new QThread();
     auto worker = new ProcessWorker();
     worker->moveToThread(thread);
@@ -17,12 +18,14 @@ void MainWindow::OnRefreshClicked() const {
 }
 
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
+{
     ui_.setupUi(this);
     connect(ui_.btn_refresh, &QPushButton::clicked, this, &MainWindow::OnRefreshClicked);
 }
 
-void MainWindow::UpdateProcessList(const std::list<std::pair<DWORD, win32::tstring>> &process_list) {
+void MainWindow::UpdateProcessList(const std::list<std::pair<DWORD, win32::tstring>> &process_list)
+{
     auto model = new QStandardItemModel();
     model->setColumnCount(2);
     model->setRowCount((int) process_list.size());

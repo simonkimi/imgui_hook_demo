@@ -2,7 +2,8 @@
 #include "process_helper.h"
 
 
-void ProcessWorker::DoGetProcessList() {
+void ProcessWorker::DoGetProcessList()
+{
     auto processList = win32::GetProcessList();
     emit ProcessListReady(processList);
 }

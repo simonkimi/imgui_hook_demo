@@ -13,7 +13,8 @@ std::thread ui_looper;
 std::thread message_looper;
 
 
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+{
     if (fdwReason == DLL_PROCESS_ATTACH) {
         std::wcout << L"Dll被挂载" << std::endl;
         if (!RegisterHotKey(nullptr, HOTKEY_DISPLAY_WINDOWS, MOD_CONTROL | MOD_ALT, VK_F10)) {
@@ -35,7 +36,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 }
 
 
-void UILopper() {
+void UILopper()
+{
     MainView view;
     ImguiController *controller;
 

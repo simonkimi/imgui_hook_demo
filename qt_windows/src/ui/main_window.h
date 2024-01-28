@@ -17,7 +17,7 @@ public:
 
 public slots:
 
-    void UpdateProcessList(const std::list<std::pair<DWORD, win32::tstring>>& process_list);
+    void UpdateProcessList(const std::list<std::pair<DWORD, win32::tstring>> &process_list);
 
     void OnRefreshClicked() const;
 

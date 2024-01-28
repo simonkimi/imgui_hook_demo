@@ -2,11 +2,13 @@
 #include "string_helper.h"
 
 
-void MainView::DisplaySubWindow() {
+void MainView::DisplaySubWindow()
+{
     if (is_display_demo_window_) ImGui::ShowDemoWindow(&is_display_demo_window_);
 }
 
-bool MainView::Render(HWND hwnd) {
+bool MainView::Render(HWND hwnd)
+{
     if (!ImGui::Begin("测试程序", &open_, flags)) {
         ImGui::End();
         return open_;
