@@ -29,3 +29,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE win32_helper)
 set_target_properties(${PROJECT_NAME} PROPERTIES
         WIN32_EXECUTABLE ON
 )
+
+target_precompile_headers(${PROJECT_NAME} PRIVATE include/pch.h)
