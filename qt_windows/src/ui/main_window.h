@@ -29,6 +29,12 @@ public slots:
     void OnRefreshClicked() const;
     
     void OnSelectDllClicked();
+    
+    void OnInjectDllClicked() const;
+    
+    void OnFreeDllClicked() const;
+    
+    void OnFilterChanged();
 
 private:
     Ui::MainWindow ui_{};

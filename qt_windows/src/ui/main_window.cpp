@@ -3,12 +3,14 @@
 #include <QStandardItemModel>
 #include <QFileDialog>
 #include <utility>
+#include "process_helper.h"
 
 MainWindow::MainWindow(QWidget *parent) :
         QMainWindow(parent),
         settings_("./setting.ini", QSettings::IniFormat)
 {
     InitUi();
+    OnRefreshClicked();
 }
 
 void MainWindow::InitUi()
@@ -18,10 +20,15 @@ void MainWindow::InitUi()
     ui_.table_process->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui_.table_process->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui_.lineEdit_dll->setText(settings_.value("DllPath").toString());
+    ui_.lineEdit_dll->setClearButtonEnabled(true);
+    ui_.lineEdit_filter->setText(settings_.value("Filter").toString());
+    ui_.lineEdit_filter->setClearButtonEnabled(true);
     connect(ui_.btn_refresh, &QPushButton::clicked, this, &MainWindow::OnRefreshClicked);
-    connect(ui_.lineEdit_filter, &QLineEdit::textChanged, this, &MainWindow::UpdateProcessList);
+    connect(ui_.lineEdit_filter, &QLineEdit::textChanged, this, &MainWindow::OnFilterChanged);
     connect(ui_.table_process, &QTableView::doubleClicked, this, &MainWindow::OnProcessSelected);
     connect(ui_.btn_select_dll, &QPushButton::clicked, this, &MainWindow::OnSelectDllClicked);
+    connect(ui_.btn_inject, &QPushButton::clicked, this, &MainWindow::OnInjectDllClicked);
+    connect(ui_.btn_free, &QPushButton::clicked, this, &MainWindow::OnFreeDllClicked);
 }
 
 
@@ -99,6 +106,36 @@ void MainWindow::OnSelectDllClicked()
     }
     ui_.lineEdit_dll->setText(dialog);
     settings_.setValue("DllPath", dialog);
+}
+
+void MainWindow::OnInjectDllClicked() const
+{
+    auto pid = ui_.label_pid->text().split(":")[1].toInt();
+    auto dll_path = ui_.lineEdit_dll->text().toStdWString();
+    auto result = win32::CrtInjectDll(pid, dll_path.c_str());
+    if (result) {
+        QMessageBox::information((QWidget *) this, "提示", "注入成功");
+    } else {
+        QMessageBox::critical((QWidget *) this, "提示", "注入失败");
+    }
+}
+
+void MainWindow::OnFreeDllClicked() const
+{
+    auto pid = ui_.label_pid->text().split(":")[1].toInt();
+    auto dll_path = ui_.lineEdit_dll->text().toStdWString();
+    auto result = win32::CrtFreeDll(pid, dll_path.c_str());
+    if (result) {
+        QMessageBox::information((QWidget *) this, "提示", "卸载成功");
+    } else {
+        QMessageBox::critical((QWidget *) this, "提示", "卸载失败");
+    }
+}
+
+void MainWindow::OnFilterChanged()
+{
+    settings_.setValue("Filter", ui_.lineEdit_filter->text());
+    UpdateProcessList();
 }
 
 

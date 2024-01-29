@@ -1,62 +1,40 @@
-#include "main_view.h"
-#include "imgui_controller.h"
-#include <iostream>
-#include <thread>
+#include <pch.h>
+#include "event_loop.h"
 
-#define HOTKEY_DISPLAY_WINDOWS 1
+WindowsEventLoop event_loop;
+std::thread event_loop_thread;
 
-void UILopper();
+void LoopThread();
 
-std::atomic<bool> is_run(true);
-std::atomic<bool> is_display_windows(true);
-std::thread ui_looper;
-std::thread message_looper;
-
-
-BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
+BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD fdw_reason, LPVOID lpv_reserved)
 {
-    if (fdwReason == DLL_PROCESS_ATTACH) {
-        std::wcout << L"Dll被挂载" << std::endl;
-        if (!RegisterHotKey(nullptr, HOTKEY_DISPLAY_WINDOWS, MOD_CONTROL | MOD_ALT, VK_F10)) {
-            std::wcout << std::format(L"注册热键失败, 错误码:{}", GetLastError()) << std::endl;
-            return FALSE;
-        }
-        ui_looper = std::thread(UILopper);
-        return TRUE;
+    switch (fdw_reason) {
+        case DLL_PROCESS_ATTACH:
+            event_loop_thread = std::thread(LoopThread);
+            MessageBox(nullptr, L"DLL_PROCESS_ATTACH", L"Dll注入", MB_OK);
+            break;
+        case DLL_PROCESS_DETACH:
+            MessageBox(nullptr, L"DLL_PROCESS_DETACH", L"Dll注入", MB_OK);
+            event_loop.Stop();
+            event_loop_thread.join();
+            break;
+        case DLL_THREAD_ATTACH:
+            MessageBox(nullptr, L"DLL_THREAD_ATTACH!", L"Dll注入", MB_OK);
+            break;
+        case DLL_THREAD_DETACH:
+            MessageBox(nullptr, L"DLL_THREAD_DETACH!", L"Dll注入", MB_OK);
+            break;
+        default:
+            break;
     }
-
-    if (fdwReason == DLL_PROCESS_DETACH) {
-        std::wcout << L"Dll被卸载" << std::endl;
-        UnregisterHotKey(nullptr, HOTKEY_DISPLAY_WINDOWS);
-        is_run = false;
-        ui_looper.join();
-    }
-
     return TRUE;
 }
 
 
-void UILopper()
+void LoopThread()
 {
-    MainView view;
-    ImguiController *controller;
-
-    while (is_run) {
-        if (is_display_windows) {
-            if (controller == nullptr) {
-                controller = new ImguiController();
-            }
-            if (!controller->Loop([&view, &controller] { return view.Render(controller->GetHwnd()); })) {
-                is_display_windows = false;
-            }
-        } else {
-            if (controller != nullptr) {
-                delete controller;
-                controller = nullptr;
-            }
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        }
-    }
-
-    delete controller;
+    event_loop.RegisterHotKey(TEST_HOT_KEY, MOD_ALT | MOD_CONTROL, 'A', []() {
+        MessageBox(nullptr, L"热键被触发!", L"特检", MB_OK);
+    });
+    event_loop.Run();
 }
