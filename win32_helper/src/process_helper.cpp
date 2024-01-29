@@ -1,4 +1,5 @@
 #include "process_helper.h"
+#include <psapi.h>
 
 import raii;
 
@@ -99,64 +100,77 @@ bool win32::CrtFreeDll(DWORD pid, LPCTSTR dll_path)
 {
     // 打开注入进程
     HandleRaii hProcess(::OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid));
-
     if (hProcess.Get() == nullptr) {
+        std::wcout << std::format(L"OpenProcess failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
-    SIZE_T dll_size = (lstrlen(dll_path) + 1) * sizeof(TCHAR);
-
-    VirtualAllocRaii dll_addr(hProcess.Get(), dll_size);
-    if (dll_addr.IsInvalid())
-        return false;
-
-
-    // 注入dll文件名称
-    if (!::WriteProcessMemory(hProcess.Get(), dll_addr.Get(), dll_path, dll_size, nullptr)) {
+    HMODULE dll_handle = FindRemoteModuleHandle(hProcess.Get(), dll_path);
+    if (dll_handle == nullptr) {
+        std::wcout << std::format(L"FindRemoteModuleHandle failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
-    // 获取LoadLibraryA函数地址
-    FARPROC load_lib_addr = ::GetProcAddress(::GetModuleHandle(_T("kernel32.dll")), "FreeLibrary");
-    if (load_lib_addr == nullptr) {
-        return false;
-    }
+    // 获取FreeLibrary函数地址
+    FARPROC free_lib_addr = ::GetProcAddress(::GetModuleHandle(_T("kernel32.dll")), "FreeLibrary");
 
     // 在注入进程中创建远程线程
     HandleRaii thread_handle(::CreateRemoteThread(
             hProcess.Get(),
             nullptr,
             0,
-            (LPTHREAD_START_ROUTINE) load_lib_addr,
-            dll_addr.Get(),
+            (LPTHREAD_START_ROUTINE) free_lib_addr,
+            dll_handle,
             0,
             nullptr
     ));
+
     if (thread_handle.IsInvalid()) {
+        std::wcout << std::format(L"CreateRemoteThread failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
     WaitForSingleObject(thread_handle.Get(), INFINITE);
-
     return true;
 }
 
-bool win32::GetRemoteModuleHandle(DWORD pid, LPCTSTR modulePath, HMODULE &hModule)
+
+std::list<std::pair<HMODULE, win32::tstring>> win32::GetProcessModules(DWORD pid)
 {
-    hModule = nullptr;
-    HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, pid);
-    if (hSnapshot != INVALID_HANDLE_VALUE) {
-        MODULEENTRY32 me32;
-        me32.dwSize = sizeof(MODULEENTRY32);
-        if (Module32First(hSnapshot, &me32)) {
-            do {
-                if (_tcsicmp(me32.szExePath, modulePath) == 0) {
-                    hModule = me32.hModule;
-                    break;
-                }
-            } while (Module32Next(hSnapshot, &me32));
+    std::list<std::pair<HMODULE, win32::tstring>> module_list;
+    HandleRaii handle(::OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid));
+    if (handle.IsInvalid())
+        return module_list;
+
+    HMODULE hMods[1024];
+    DWORD cbNeeded;
+    if (EnumProcessModules(handle.Get(), hMods, sizeof(hMods), &cbNeeded)) {
+        for (int i = 0; i < (cbNeeded / sizeof(HMODULE)); i++) {
+            TCHAR szModName[MAX_PATH];
+            if (GetModuleFileNameEx(handle.Get(), hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR))) {
+                module_list.emplace_back(hMods[i], szModName);
+            }
         }
-        CloseHandle(hSnapshot);
     }
-    return (hModule != nullptr);
+
+    return module_list;
 }
+
+HMODULE win32::FindRemoteModuleHandle(HANDLE handle, LPCTSTR modulePath)
+{
+    HMODULE hMods[1024];
+    DWORD cbNeeded;
+    if (EnumProcessModules(handle, hMods, sizeof(hMods), &cbNeeded)) {
+        for (int i = 0; i < (cbNeeded / sizeof(HMODULE)); i++) {
+            TCHAR szModName[MAX_PATH];
+            if (GetModuleFileNameEx(handle, hMods[i], szModName, sizeof(szModName) / sizeof(TCHAR))) {
+                if (lstrcmpi(szModName, modulePath) == 0) {
+                    return hMods[i];
+                }
+            }
+        }
+    }
+    return nullptr;
+}
+
+

@@ -18,14 +18,6 @@ void WindowsEventLoop::RegisterHotKey(int id, UINT modifiers, UINT vk, EventCall
     hotkeys_.emplace(id, std::move(callback));
 }
 
-void WindowsEventLoop::UnregisterHotKey(int id)
-{
-    if (hotkeys_.find(id) == hotkeys_.end())
-        return;
-    if (!::UnregisterHotKey(hwnd_, id))
-        throw std::runtime_error("UnregisterHotKey failed");
-    hotkeys_.erase(id);
-}
 
 void WindowsEventLoop::Run()
 {
@@ -55,20 +47,17 @@ void WindowsEventLoop::Run()
         DispatchMessage(&msg);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
-
+    std::for_each(hotkeys_.begin(), hotkeys_.end(), [&](auto &pair) {
+        if (!::UnregisterHotKey(hwnd_, (int) pair.first)) {
+            std::wcout << std::format(L"UnregisterHotKey failed, error code: {}", ::GetLastError()) << std::endl;
+        }
+    });
+    hotkeys_.clear();
 }
 
 void WindowsEventLoop::Stop()
 {
     running_ = false;
-    std::for_each(hotkeys_.begin(), hotkeys_.end(), [this](auto &pair) {
-        try {
-            UnregisterHotKey(pair.first);
-        } catch (const std::exception &e) {
-            std::cerr << e.what() << std::endl;
-        }
-    });
-    hotkeys_.clear();
 }
 
 

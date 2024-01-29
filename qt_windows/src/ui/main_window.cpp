@@ -111,7 +111,7 @@ void MainWindow::OnSelectDllClicked()
 void MainWindow::OnInjectDllClicked() const
 {
     auto pid = ui_.label_pid->text().split(":")[1].toInt();
-    auto dll_path = ui_.lineEdit_dll->text().toStdWString();
+    auto dll_path = ui_.lineEdit_dll->text().replace("/", "\\").toStdWString();
     auto result = win32::CrtInjectDll(pid, dll_path.c_str());
     if (result) {
         QMessageBox::information((QWidget *) this, "提示", "注入成功");
@@ -123,7 +123,7 @@ void MainWindow::OnInjectDllClicked() const
 void MainWindow::OnFreeDllClicked() const
 {
     auto pid = ui_.label_pid->text().split(":")[1].toInt();
-    auto dll_path = ui_.lineEdit_dll->text().toStdWString();
+    auto dll_path = ui_.lineEdit_dll->text().replace("/", "\\").toStdWString();
     auto result = win32::CrtFreeDll(pid, dll_path.c_str());
     if (result) {
         QMessageBox::information((QWidget *) this, "提示", "卸载成功");

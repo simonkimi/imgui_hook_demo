@@ -1,8 +1,7 @@
 #pragma once
 
-#include <Qt>
+#include "pch.h"
 #include <QThread>
-#include "Windows.h"
 #include "string_helper.h"
 
 class ProcessWorker : public QObject {

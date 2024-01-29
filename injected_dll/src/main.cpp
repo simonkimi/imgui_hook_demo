@@ -11,18 +11,12 @@ BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD fdw_reason, LPVOID lpv_reserved)
     switch (fdw_reason) {
         case DLL_PROCESS_ATTACH:
             event_loop_thread = std::thread(LoopThread);
-            MessageBox(nullptr, L"DLL_PROCESS_ATTACH", L"Dll注入", MB_OK);
+            MessageBox(nullptr, L"DLL注入成功!", L"Dll注入", MB_OK);
             break;
         case DLL_PROCESS_DETACH:
-            MessageBox(nullptr, L"DLL_PROCESS_DETACH", L"Dll注入", MB_OK);
+            MessageBox(nullptr, L"DLL卸载成功", L"Dll注入", MB_OK);
             event_loop.Stop();
-            event_loop_thread.join();
-            break;
-        case DLL_THREAD_ATTACH:
-            MessageBox(nullptr, L"DLL_THREAD_ATTACH!", L"Dll注入", MB_OK);
-            break;
-        case DLL_THREAD_DETACH:
-            MessageBox(nullptr, L"DLL_THREAD_DETACH!", L"Dll注入", MB_OK);
+            event_loop_thread.detach();
             break;
         default:
             break;

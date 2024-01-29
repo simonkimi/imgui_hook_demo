@@ -26,9 +26,6 @@ public:
     /// \param callback 热键按下后的回调函数
     void RegisterHotKey(int id, UINT modifiers, UINT vk, EventCallback callback);
 
-    /// 注销热键
-    /// \param id 热键Id, 需要确保唯一
-    void UnregisterHotKey(int id);
 
     /// 启动事件循环
     void Run();
