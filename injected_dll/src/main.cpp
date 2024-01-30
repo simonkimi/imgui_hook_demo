@@ -10,6 +10,7 @@ BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD fdw_reason, LPVOID lpv_reserved)
 {
     switch (fdw_reason) {
         case DLL_PROCESS_ATTACH:
+            DisableThreadLibraryCalls(h_instance);
             event_loop_thread = std::thread(LoopThread);
             MessageBox(nullptr, L"DLL注入成功!", L"Dll注入", MB_OK);
             break;
