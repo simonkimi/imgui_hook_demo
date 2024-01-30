@@ -26,10 +26,15 @@ DWORD win32::FindProcessById(LPCTSTR process_name)
 bool win32::CrtInjectDll(DWORD pid, LPCTSTR dll_path)
 {
     // 打开注入进程
-
     HandleRaii hProcess(::OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid));
 
     if (hProcess.Get() == nullptr) {
+        std::wcerr << std::format(L"OpenProcess failed, error code: {}", ::GetLastError()) << std::endl;
+        return false;
+    }
+
+    if (FindRemoteModuleHandle(hProcess.Get(), dll_path) != nullptr) {
+        std::wcerr << L"当前模块已经被加载" << std::endl;
         return false;
     }
 
@@ -38,11 +43,13 @@ bool win32::CrtInjectDll(DWORD pid, LPCTSTR dll_path)
     // 在注入进程中申请内存
     VirtualAllocRaii dll_addr(hProcess.Get(), dll_size);
     if (dll_addr.IsInvalid()) {
+        std::wcerr << std::format(L"VirtualAllocEx failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
     // 注入dll文件名称
     if (!::WriteProcessMemory(hProcess.Get(), dll_addr.Get(), dll_path, dll_size, nullptr)) {
+        std::wcerr << std::format(L"WriteProcessMemory failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
@@ -53,6 +60,7 @@ bool win32::CrtInjectDll(DWORD pid, LPCTSTR dll_path)
     FARPROC load_lib_addr = ::GetProcAddress(::GetModuleHandle(_T("kernel32.dll")), "LoadLibraryA");
 #endif
     if (load_lib_addr == nullptr) {
+        std::wcerr << std::format(L"GetProcAddress failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
@@ -67,6 +75,7 @@ bool win32::CrtInjectDll(DWORD pid, LPCTSTR dll_path)
             nullptr
     ));
     if (thread_handle.IsInvalid()) {
+        std::wcerr << std::format(L"CreateRemoteThread failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
@@ -94,44 +103,6 @@ std::list<std::pair<DWORD, win32::tstring>> win32::GetProcessList()
     }
 
     return process_list;
-}
-
-bool win32::CrtFreeDll(DWORD pid, LPCTSTR dll_path)
-{
-    // 打开注入进程
-    HandleRaii hProcess(::OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid));
-    if (hProcess.Get() == nullptr) {
-        std::wcout << std::format(L"OpenProcess failed, error code: {}", ::GetLastError()) << std::endl;
-        return false;
-    }
-
-    HMODULE dll_handle = FindRemoteModuleHandle(hProcess.Get(), dll_path);
-    if (dll_handle == nullptr) {
-        std::wcout << std::format(L"FindRemoteModuleHandle failed, error code: {}", ::GetLastError()) << std::endl;
-        return false;
-    }
-
-    // 获取FreeLibrary函数地址
-    FARPROC free_lib_addr = ::GetProcAddress(::GetModuleHandle(_T("kernel32.dll")), "FreeLibrary");
-
-    // 在注入进程中创建远程线程
-    HandleRaii thread_handle(::CreateRemoteThread(
-            hProcess.Get(),
-            nullptr,
-            0,
-            (LPTHREAD_START_ROUTINE) free_lib_addr,
-            dll_handle,
-            0,
-            nullptr
-    ));
-
-    if (thread_handle.IsInvalid()) {
-        std::wcout << std::format(L"CreateRemoteThread failed, error code: {}", ::GetLastError()) << std::endl;
-        return false;
-    }
-
-    WaitForSingleObject(thread_handle.Get(), INFINITE);
-    return true;
 }
 
 
@@ -171,6 +142,40 @@ HMODULE win32::FindRemoteModuleHandle(HANDLE handle, LPCTSTR modulePath)
         }
     }
     return nullptr;
+}
+
+bool win32::CrtFreeDll(DWORD pid, LPCTSTR dll_path)
+{
+    HandleRaii hProcess(::OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid));
+    if (hProcess.Get() == nullptr) {
+        std::wcerr << std::format(L"OpenProcess failed, error code: {}", ::GetLastError()) << std::endl;
+        return false;
+    }
+
+    HMODULE dll_handle = FindRemoteModuleHandle(hProcess.Get(), dll_path);
+    if (dll_handle == nullptr) {
+        std::wcerr << std::format(L"FindRemoteModuleHandle failed, error code: {}", ::GetLastError()) << std::endl;
+        return false;
+    }
+
+    FARPROC free_lib_addr = ::GetProcAddress(::GetModuleHandle(_T("kernel32.dll")), "FreeLibrary");
+    HandleRaii thread_handle(::CreateRemoteThread(
+            hProcess.Get(),
+            nullptr,
+            0,
+            (LPTHREAD_START_ROUTINE) free_lib_addr,
+            dll_handle,
+            0,
+            nullptr
+    ));
+
+    if (thread_handle.IsInvalid()) {
+        std::wcerr << std::format(L"CreateRemoteThread failed, error code: {}", ::GetLastError()) << std::endl;
+        return false;
+    }
+
+    WaitForSingleObject(thread_handle.Get(), INFINITE);
+    return true;
 }
 
 

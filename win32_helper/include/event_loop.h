@@ -5,37 +5,50 @@
 #include <queue>
 #include <mutex>
 
-
 using EventCallback = std::function<void()>;
 
-class WindowsEventLoop {
-public:
-    /// 为窗口注册热键
-    /// \param hwnd 
-    explicit WindowsEventLoop(HWND hwnd);
+void HotkeyEventLoop(HWND hWnd,
+                     std::atomic<bool> &cancel_token,
+                     std::list<std::tuple<UINT, UINT, EventCallback>> hotkeys
+)
+{
+    std::unordered_map<int, EventCallback> hotkey_map;
+    int hotkey_id = 0;
+    for (auto &hotkey: hotkeys) {
+        auto [modifiers, vk, callback] = hotkey;
+        if (!::RegisterHotKey(hWnd, hotkey_id, modifiers, vk)) {
+            std::wcerr << std::format(L"RegisterHotKey failed, error code: {}", ::GetLastError()) << std::endl;
+            cancel_token = true;
+            break;
+        }
+        hotkey_map.emplace(hotkey_id, std::move(callback));
+        hotkey_id += 1;
+    }
 
-    /// 为线程注册热键
-    explicit WindowsEventLoop();
+    MSG msg;
+    while (!cancel_token) {
+        if (!PeekMessage(&msg, hWnd, 0, 0, PM_REMOVE))
+            continue;
+        switch (msg.message) {
+            case WM_QUIT:
+                cancel_token = true;
+                continue;
+            case WM_HOTKEY: {
+                auto it = hotkey_map.find(msg.wParam);
+                if (it != hotkey_map.end()) {
+                    it->second();
+                }
+                break;
+            }
+        }
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
 
-    ~WindowsEventLoop();
-
-    /// 注册热键
-    /// \param id 热键Id, 需要确保唯一
-    /// \param modifiers 
-    /// \param vk 
-    /// \param callback 热键按下后的回调函数
-    void RegisterHotKey(int id, UINT modifiers, UINT vk, EventCallback callback);
-
-
-    /// 启动事件循环
-    void Run();
-
-    /// 停止事件循环
-    void Stop();
-
-private:
-    std::atomic<bool> running_ = true;
-    HWND hwnd_;
-    std::unordered_map<DWORD, EventCallback> hotkeys_{};
-    std::mutex mutex_;
-};
+    std::for_each(hotkey_map.begin(), hotkey_map.end(), [&](auto &pair) {
+        if (!::UnregisterHotKey(hWnd, (int) pair.first)) {
+            std::wcerr << std::format(L"UnregisterHotKey failed, error code: {}", ::GetLastError()) << std::endl;
+        }
+    });
+}
