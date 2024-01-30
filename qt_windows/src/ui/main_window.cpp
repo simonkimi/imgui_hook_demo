@@ -23,6 +23,7 @@ void MainWindow::InitUi()
     ui_.lineEdit_dll->setClearButtonEnabled(true);
     ui_.lineEdit_filter->setText(settings_.value("Filter").toString());
     ui_.lineEdit_filter->setClearButtonEnabled(true);
+    ui_.lineEdit_process->setText(settings_.value("ProcessName").toString());
     connect(ui_.btn_refresh, &QPushButton::clicked, this, &MainWindow::OnRefreshClicked);
     connect(ui_.lineEdit_filter, &QLineEdit::textChanged, this, &MainWindow::OnFilterChanged);
     connect(ui_.table_process, &QTableView::doubleClicked, this, &MainWindow::OnProcessSelected);
@@ -86,7 +87,7 @@ void MainWindow::GetProcessList(std::list<std::pair<DWORD, win32::tstring>> proc
     UpdateProcessList();
 }
 
-void MainWindow::OnProcessSelected(const QModelIndex &index) const
+void MainWindow::OnProcessSelected(const QModelIndex &index)
 {
     auto pid_index = ui_.table_process->model()->index(index.row(), 0);
     auto name_index = ui_.table_process->model()->index(index.row(), 1);
@@ -95,6 +96,7 @@ void MainWindow::OnProcessSelected(const QModelIndex &index) const
 
     ui_.label_pid->setText(QString("PID: %1").arg(pid));
     ui_.lineEdit_process->setText(name);
+    settings_.setValue("ProcessName", name);
 }
 
 void MainWindow::OnSelectDllClicked()
@@ -110,7 +112,13 @@ void MainWindow::OnSelectDllClicked()
 
 void MainWindow::OnInjectDllClicked() const
 {
-    auto pid = ui_.label_pid->text().split(":")[1].toInt();
+    auto process_name = ui_.lineEdit_process->text().toStdWString();
+    auto pid = win32::FindProcessById(process_name.c_str());
+    if (pid <= 0) {
+        QMessageBox::critical((QWidget *) this, "提示", "进程不存在");
+        return;
+    }
+    ui_.label_pid->setText(QString("PID: %1").arg(pid));
     auto dll_path = ui_.lineEdit_dll->text().replace("/", "\\").toStdWString();
     auto result = win32::CrtInjectDll(pid, dll_path.c_str());
     if (result) {

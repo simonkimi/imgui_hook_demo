@@ -7,7 +7,6 @@
 #include <QSettings>
 
 
-
 class MainWindow : public QMainWindow {
 Q_OBJECT
 
@@ -15,14 +14,14 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
 
     ~MainWindow() override;
-    
+
     void InitUi();
 
 public slots:
 
     void UpdateProcessList() const;
 
-    void OnProcessSelected(const QModelIndex &index) const;
+    void OnProcessSelected(const QModelIndex &index);
 
     void GetProcessList(std::list<std::pair<DWORD, win32::tstring>> process_list);
 
@@ -31,15 +30,15 @@ public slots:
     void OnSelectDllClicked();
     
     void OnInjectDllClicked() const;
-    
+
     void OnFreeDllClicked() const;
-    
+
     void OnFilterChanged();
 
 private:
     Ui::MainWindow ui_{};
 
     std::list<std::pair<DWORD, win32::tstring>> process_list_{};
-    
+
     QSettings settings_;
 };

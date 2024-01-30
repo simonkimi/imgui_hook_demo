@@ -2,7 +2,7 @@ project("injected_dll")
 
 find_package(imgui CONFIG REQUIRED)
 
-file(GLOB_RECURSE SOURCE_FILES "include/*.h" "src/*.cpp")
+file(GLOB_RECURSE SOURCE_FILES "include/*.h" "src/*.h" "src/*.cpp")
 
 include_directories(include)
 include_directories(${CMAKE_SOURCE_DIR}/win32_helper/include)
