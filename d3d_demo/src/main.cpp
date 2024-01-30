@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "d3d_demo.h"
 
 LRESULT WINAPI WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -18,13 +19,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     bool done = false;
 
+    D3dDemo demo{};
+    demo.Init(hwnd, 300, 300);
+
     while (!done) {
         if (!MessageLoop()) {
             done = true;
             continue;
         }
+        demo.Render();
     }
 
+    demo.Release();
     ::DestroyWindow(hwnd);
     ::UnregisterClassW(wc.lpszClassName, wc.hInstance);
     return 0;
