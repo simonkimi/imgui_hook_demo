@@ -4,7 +4,7 @@
 int main(int argc, char *argv[])
 {
     DWORD pid = win32::FindProcessById(L"qt_windows.exe");
-    std::wcout << std::format(L"PID: {}", pid) << std::endl;
+    std::cout << std::format("PID: {}", pid) << std::endl;
 
     auto modules = win32::GetProcessModules(pid);
     for (auto &[hMod, path]: modules) {

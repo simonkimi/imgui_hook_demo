@@ -29,12 +29,12 @@ bool win32::CrtInjectDll(DWORD pid, LPCTSTR dll_path)
     HandleRaii hProcess(::OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid));
 
     if (hProcess.Get() == nullptr) {
-        std::wcerr << std::format(L"OpenProcess failed, error code: {}", ::GetLastError()) << std::endl;
+        std::cerr << std::format("OpenProcess failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
     if (FindRemoteModuleHandle(hProcess.Get(), dll_path) != nullptr) {
-        std::wcerr << L"当前模块已经被加载" << std::endl;
+        std::cerr << "当前模块已经被加载" << std::endl;
         return false;
     }
 
@@ -43,13 +43,13 @@ bool win32::CrtInjectDll(DWORD pid, LPCTSTR dll_path)
     // 在注入进程中申请内存
     VirtualAllocRaii dll_addr(hProcess.Get(), dll_size);
     if (dll_addr.IsInvalid()) {
-        std::wcerr << std::format(L"VirtualAllocEx failed, error code: {}", ::GetLastError()) << std::endl;
+        std::cerr << std::format("VirtualAllocEx failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
     // 注入dll文件名称
     if (!::WriteProcessMemory(hProcess.Get(), dll_addr.Get(), dll_path, dll_size, nullptr)) {
-        std::wcerr << std::format(L"WriteProcessMemory failed, error code: {}", ::GetLastError()) << std::endl;
+        std::cerr << std::format("WriteProcessMemory failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
@@ -60,7 +60,7 @@ bool win32::CrtInjectDll(DWORD pid, LPCTSTR dll_path)
     FARPROC load_lib_addr = ::GetProcAddress(::GetModuleHandle(_T("kernel32.dll")), "LoadLibraryA");
 #endif
     if (load_lib_addr == nullptr) {
-        std::wcerr << std::format(L"GetProcAddress failed, error code: {}", ::GetLastError()) << std::endl;
+        std::cerr << std::format("GetProcAddress failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
@@ -75,7 +75,7 @@ bool win32::CrtInjectDll(DWORD pid, LPCTSTR dll_path)
             nullptr
     ));
     if (thread_handle.IsInvalid()) {
-        std::wcerr << std::format(L"CreateRemoteThread failed, error code: {}", ::GetLastError()) << std::endl;
+        std::cerr << std::format("CreateRemoteThread failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
@@ -148,13 +148,13 @@ bool win32::CrtFreeDll(DWORD pid, LPCTSTR dll_path)
 {
     HandleRaii hProcess(::OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid));
     if (hProcess.Get() == nullptr) {
-        std::wcerr << std::format(L"OpenProcess failed, error code: {}", ::GetLastError()) << std::endl;
+        std::cerr << std::format("OpenProcess failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
     HMODULE dll_handle = FindRemoteModuleHandle(hProcess.Get(), dll_path);
     if (dll_handle == nullptr) {
-        std::wcerr << std::format(L"FindRemoteModuleHandle failed, error code: {}", ::GetLastError()) << std::endl;
+        std::cerr << std::format("FindRemoteModuleHandle failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 
@@ -170,7 +170,7 @@ bool win32::CrtFreeDll(DWORD pid, LPCTSTR dll_path)
     ));
 
     if (thread_handle.IsInvalid()) {
-        std::wcerr << std::format(L"CreateRemoteThread failed, error code: {}", ::GetLastError()) << std::endl;
+        std::cerr << std::format("CreateRemoteThread failed, error code: {}", ::GetLastError()) << std::endl;
         return false;
     }
 

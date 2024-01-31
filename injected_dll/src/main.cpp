@@ -9,8 +9,10 @@ void OnProcessAttach();
 
 void OnProcessDetach();
 
+void EventLoopThread();
 
-BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD fdw_reason, LPVOID lpv_reserved)
+
+API BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD fdw_reason, API LPVOID lpv_reserved)
 {
     switch (fdw_reason) {
         case DLL_PROCESS_ATTACH:
@@ -30,11 +32,12 @@ void OnProcessAttach()
 {
     AllocConsole();
     freopen_s((FILE **) stdout, "CONOUT$", "w", stdout);
+    freopen_s((FILE **) stderr, "CONOUT$", "w", stderr);
     SetConsoleOutputCP(CP_UTF8);
-    SetConsoleTitle(_T("注入DLL"));
+    SetConsoleTitle(_T("Injected DLL"));
     exit_event = CreateEvent(nullptr, TRUE, FALSE, nullptr);
     hotkey_thread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE) EventLoopThread, nullptr, 0, nullptr);
-    std::cout << "注入完毕" << std::endl;
+    std::cout << "Dll初始化完毕" << std::endl;
 }
 
 void OnProcessDetach()
@@ -43,7 +46,7 @@ void OnProcessDetach()
     WaitForSingleObject(exit_event, INFINITE);
     ::CloseHandle(hotkey_thread);
     ::CloseHandle(exit_event);
-    std::cout << "卸载完毕" << std::endl;
+    std::cout << "Dll卸载完毕" << std::endl;
     FreeConsole();
 }
 

@@ -12,7 +12,7 @@ void HotkeyEventLoop(
     for (auto &hotkey: hotkeys) {
         auto [modifiers, vk, callback] = hotkey;
         if (!::RegisterHotKey(hWnd, hotkey_id, modifiers, vk)) {
-            std::wcerr << std::format(L"RegisterHotKey failed, error code: {}", ::GetLastError()) << std::endl;
+            std::cerr << std::format("RegisterHotKey failed, error code: {}", ::GetLastError()) << std::endl;
             cancel_token = true;
             break;
         }
@@ -29,7 +29,7 @@ void HotkeyEventLoop(
                 cancel_token = true;
                 continue;
             case WM_HOTKEY: {
-                auto it = hotkey_map.find(msg.wParam);
+                auto it = hotkey_map.find((int)msg.wParam);
                 if (it != hotkey_map.end()) {
                     it->second();
                 }
@@ -43,7 +43,7 @@ void HotkeyEventLoop(
 
     std::for_each(hotkey_map.begin(), hotkey_map.end(), [&](auto &pair) {
         if (!::UnregisterHotKey(hWnd, (int) pair.first)) {
-            std::wcerr << std::format(L"UnregisterHotKey failed, error code: {}", ::GetLastError()) << std::endl;
+            std::cerr << std::format("UnregisterHotKey failed, error code: {}", ::GetLastError()) << std::endl;
         }
     });
 }

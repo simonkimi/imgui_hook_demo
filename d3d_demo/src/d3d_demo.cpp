@@ -26,14 +26,14 @@ bool D3dDemo::Init(HWND hWnd, float width, float height)
                                             &sd, &d3d_swap_chain_, &d3d_device_,
                                             nullptr, &d3d_device_context_);
     if (FAILED(hresult)) {
-        std::wcerr << L"D3D11CreateDeviceAndSwapChain failed" << std::endl;
+        std::cerr << "D3D11CreateDeviceAndSwapChain failed" << std::endl;
         return false;
     }
 
     ID3D11Texture2D *pBackBuffer;
     hresult = d3d_swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *) &pBackBuffer);
     if (FAILED(hresult)) {
-        std::wcerr << L"GetBuffer failed" << std::endl;
+        std::cerr << "GetBuffer failed" << std::endl;
         return false;
     }
 
@@ -41,7 +41,7 @@ bool D3dDemo::Init(HWND hWnd, float width, float height)
 
     pBackBuffer->Release();
     if (FAILED(hresult)) {
-        std::wcerr << L"CreateRenderTargetView failed" << std::endl;
+        std::cerr << "CreateRenderTargetView failed" << std::endl;
         return false;
     }
 
