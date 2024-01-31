@@ -5,22 +5,20 @@ HANDLE hotkey_thread;
 HANDLE exit_event;
 std::atomic_bool cancel_token = false;
 
+void OnProcessAttach();
+
+void OnProcessDetach();
+
 
 BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD fdw_reason, LPVOID lpv_reserved)
 {
     switch (fdw_reason) {
         case DLL_PROCESS_ATTACH:
             DisableThreadLibraryCalls(h_instance);
-            exit_event = CreateEvent(nullptr, TRUE, FALSE, nullptr);
-            hotkey_thread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE) WinMsgHandle, nullptr, 0, nullptr);
-            MessageBox(nullptr, L"DLL注入成功!", L"Dll注入", MB_OK);
+            OnProcessAttach();
             break;
         case DLL_PROCESS_DETACH:
-            MessageBox(nullptr, L"DLL卸载成功", L"Dll注入", MB_OK);
-            cancel_token = true;
-            WaitForSingleObject(exit_event, INFINITE);
-            ::CloseHandle(hotkey_thread);
-            ::CloseHandle(exit_event);
+            OnProcessDetach();
             break;
         default:
             break;
@@ -28,8 +26,29 @@ BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD fdw_reason, LPVOID lpv_reserved)
     return TRUE;
 }
 
+void OnProcessAttach()
+{
+    AllocConsole();
+    freopen_s((FILE **) stdout, "CONOUT$", "w", stdout);
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleTitle(_T("注入DLL"));
+    exit_event = CreateEvent(nullptr, TRUE, FALSE, nullptr);
+    hotkey_thread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE) EventLoopThread, nullptr, 0, nullptr);
+    std::cout << "注入完毕" << std::endl;
+}
 
-void WinMsgHandle()
+void OnProcessDetach()
+{
+    cancel_token = true;
+    WaitForSingleObject(exit_event, INFINITE);
+    ::CloseHandle(hotkey_thread);
+    ::CloseHandle(exit_event);
+    std::cout << "卸载完毕" << std::endl;
+    FreeConsole();
+}
+
+
+void EventLoopThread()
 {
     std::vector<std::tuple<UINT, UINT, EventCallback>> hotkeys(2);
     hotkeys[0] = std::make_tuple(MOD_ALT | MOD_CONTROL, 'A', [] {
@@ -39,7 +58,7 @@ void WinMsgHandle()
         MessageBox(nullptr, L"热键B被触发!", L"B", MB_OK);
     });
 
-    HotkeyEventLoop(nullptr, cancel_token, std::move(hotkeys));
+    HotkeyEventLoop(nullptr, cancel_token, hotkeys);
     SetEvent(exit_event);
 }
 

@@ -10,5 +10,5 @@ using EventCallback = std::function<void()>;
 void HotkeyEventLoop(
         HWND hWnd,
         std::atomic<bool> &cancel_token,
-        std::vector<std::tuple<UINT, UINT, EventCallback>> hotkeys
+        std::vector<std::tuple<UINT, UINT, EventCallback>>& hotkeys
 );
