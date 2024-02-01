@@ -7,8 +7,5 @@
   }, {
     "name" : "imgui",
     "version>=" : "1.90#3"
-  }, {
-    "name" : "effects11",
-    "version>=" : "11.29#3"
   } ]
 }

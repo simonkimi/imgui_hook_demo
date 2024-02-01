@@ -15,7 +15,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         d3dcompiler
         dxguid dwmapi
         win32_helper
-        Microsoft::Effects11
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "include/pch.h")

@@ -1,14 +1,17 @@
-//
-// Created by ms on 2024/2/1.
-//
-
-#ifndef HACKER_DEMO_IMGUI_DRAWER_H
-#define HACKER_DEMO_IMGUI_DRAWER_H
+#pragma once
 
 
-class imgui_drawer {
+class ImguiDrawer {
+public:
+    static bool is_display_;
+    static bool is_initialized_;
 
+    static HRESULT APIENTRY Present(IDXGISwapChain *swap_chain, UINT sync_interval, UINT flags);
+
+private:
+
+
+    static void InitImgui(IDXGISwapChain *swap_chain);
 };
 
 
-#endif //HACKER_DEMO_IMGUI_DRAWER_H
