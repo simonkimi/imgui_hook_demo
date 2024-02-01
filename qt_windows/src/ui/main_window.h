@@ -34,6 +34,8 @@ public slots:
     void OnFreeDllClicked() const;
 
     void OnFilterChanged();
+    
+    void OnTestClicked() const;
 
 private:
     Ui::MainWindow ui_{};

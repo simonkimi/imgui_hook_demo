@@ -26,13 +26,13 @@ bool D3dDemo::Init(HWND hWnd, float width, float height)
             nullptr,
             D3D_DRIVER_TYPE_HARDWARE, nullptr, 0, featureLevelArray,
             2, D3D11_SDK_VERSION,
-            &sd, &d3d_swap_chain_, &d3d_device_,
-            nullptr, &d3d_device_context_);
+            &sd, d3d_swap_chain_.GetAddressOf(), d3d_device_.GetAddressOf(),
+            nullptr, d3d_device_context_.GetAddressOf());
     DxTrace(hresult);
 
 
     // 获取交换链的后台缓冲区
-    ComPtr <ID3D11Texture2D> pBackBuffer;
+    ComPtr<ID3D11Texture2D> pBackBuffer;
     hresult = d3d_swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *) &pBackBuffer);
     DxTrace(hresult);
     // 创建渲染目标视图
@@ -52,7 +52,7 @@ void D3dDemo::Render()
 {
     float ClearColor[4] = {1.0f, 0.125f, 0.6f, 1.0f}; // RGBA
     d3d_device_context_->ClearRenderTargetView(d3d_render_target_view_.Get(), ClearColor);
-    HR(d3d_swap_chain_->Present(0, 0));
+    HR(d3d_swap_chain_->Present(0, 0))
 }
 
 void D3dDemo::Release()

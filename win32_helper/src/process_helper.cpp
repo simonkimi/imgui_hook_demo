@@ -178,4 +178,31 @@ bool win32::CrtFreeDll(DWORD pid, LPCTSTR dll_path)
     return true;
 }
 
+BOOL EnumWindowsProc(HWND hwnd, LPARAM lParam)
+{
+    DWORD lpdwProcessId;
+    GetWindowThreadProcessId(hwnd, &lpdwProcessId);
+    if (lpdwProcessId == GetCurrentProcessId()) {
+        HWND *pWnd = reinterpret_cast<HWND *>(lParam);
+        if (pWnd) {
+            *pWnd = hwnd;
+        }
+        return FALSE;
+    }
+    return TRUE;
+}
 
+
+HWND win32::GetProcessWindow()
+{
+    HWND h_wnd_ = nullptr;
+    EnumWindows(EnumWindowsProc, reinterpret_cast<LPARAM>(&h_wnd_));
+    return h_wnd_;
+}
+
+std::pair<long, long> win32::GetWindowSize(HWND hwnd)
+{
+    RECT rect;
+    ::GetWindowRect(hwnd, &rect);
+    return std::make_pair(rect.right - rect.left, rect.bottom - rect.top);
+}

@@ -1,14 +1,14 @@
 {
-  "name": "hacker-demo-dep",
-  "version": "1.0.0",
-  "dependencies": [
-    {
-      "name": "detours",
-      "version>=": "4.0.1#8"
-    },
-    {
-      "name": "imgui",
-      "version>=": "1.90#3"
-    }
-  ]
+  "name" : "hacker-demo-dep",
+  "version" : "1.0.0",
+  "dependencies" : [ {
+    "name" : "detours",
+    "version>=" : "4.0.1#8"
+  }, {
+    "name" : "imgui",
+    "version>=" : "1.90#3"
+  }, {
+    "name" : "effects11",
+    "version>=" : "11.29#3"
+  } ]
 }

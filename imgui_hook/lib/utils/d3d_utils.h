@@ -10,4 +10,8 @@
 #define RELEASE_COM(x) { if (x) { x->Release(); x = nullptr; } }
 #endif
 
+
 void DxTrace(HRESULT hresult);
+
+
+bool GetDx11VTable(HWND hwnd, void **v_table, int size);

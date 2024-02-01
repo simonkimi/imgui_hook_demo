@@ -20,6 +20,9 @@ bool CrtInjectDll(DWORD pid, LPCTSTR dll_path);
 
 bool CrtFreeDll(DWORD pid, LPCTSTR dll_path);
 
+HWND GetProcessWindow();
+
+std::pair<long, long> GetWindowSize(HWND hwnd);
 }
 
 

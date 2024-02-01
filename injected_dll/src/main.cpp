@@ -1,5 +1,6 @@
 #include "main.h"
 #include "event_loop.h"
+#include "hook_demo.h"
 
 HANDLE hotkey_thread;
 HANDLE exit_event;
@@ -37,6 +38,7 @@ void OnProcessAttach()
     SetConsoleTitle(_T("Injected DLL"));
     exit_event = CreateEvent(nullptr, TRUE, FALSE, nullptr);
     hotkey_thread = CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE) EventLoopThread, nullptr, 0, nullptr);
+    StartHook();
     std::cout << "Dll初始化完毕" << std::endl;
 }
 
@@ -46,6 +48,7 @@ void OnProcessDetach()
     WaitForSingleObject(exit_event, INFINITE);
     ::CloseHandle(hotkey_thread);
     ::CloseHandle(exit_event);
+    EndHook();
     std::cout << "Dll卸载完毕" << std::endl;
     FreeConsole();
 }

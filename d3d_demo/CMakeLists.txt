@@ -1,5 +1,6 @@
 project("d3d_demo")
 
+find_package(effects11 CONFIG REQUIRED)
 
 include_directories("include")
 
@@ -14,6 +15,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         d3dcompiler
         dxguid dwmapi
         win32_helper
+        Microsoft::Effects11
 )
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "include/pch.h")

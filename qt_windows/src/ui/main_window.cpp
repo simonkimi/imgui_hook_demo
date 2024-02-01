@@ -30,6 +30,7 @@ void MainWindow::InitUi()
     connect(ui_.btn_select_dll, &QPushButton::clicked, this, &MainWindow::OnSelectDllClicked);
     connect(ui_.btn_inject, &QPushButton::clicked, this, &MainWindow::OnInjectDllClicked);
     connect(ui_.btn_free, &QPushButton::clicked, this, &MainWindow::OnFreeDllClicked);
+    connect(ui_.btn_test, &QPushButton::clicked, this, &MainWindow::OnTestClicked);
 }
 
 
@@ -144,6 +145,11 @@ void MainWindow::OnFilterChanged()
 {
     settings_.setValue("Filter", ui_.lineEdit_filter->text());
     UpdateProcessList();
+}
+
+void MainWindow::OnTestClicked() const
+{
+    MessageBox((HWND) winId(), _T("我还没有改变"), _T("测试"), MB_OK);
 }
 
 

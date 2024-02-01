@@ -7,7 +7,6 @@ void DxTrace(HRESULT hresult)
         return;
 
     _com_error error(hresult);
-    LPCTSTR msg_template = _T("D3D error, \n Message: %s\n Description: %s\n Source: %s\n");
     std::basic_stringstream<TCHAR> tss;
     tss << _T("D3D error, n Message: ")
         << error.ErrorMessage()
