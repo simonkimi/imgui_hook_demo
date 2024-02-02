@@ -4,10 +4,10 @@
 #include "utils/d3d_utils.h"
 #include "process_helper.h"
 
-using FuncPresent = HRESULT(APIENTRY *)(IDXGISwapChain *pThis, UINT SyncInterval, UINT Flag);
-using FuncResizeBuffers = HRESULT(APIENTRY *)(IDXGISwapChain *pThis, UINT BufferCount, UINT Width, UINT Height,
-                                              DXGI_FORMAT NewFormat, UINT SwapChainFlags);
-using FuncSetFullscreenState = HRESULT(APIENTRY *)(IDXGISwapChain *pThis, BOOL FullScreen, IDXGIOutput *pTarget);
+using FuncPresent = HRESULT(APIENTRY *)(IDXGISwapChain *p_this, UINT sync_interval, UINT flag);
+using FuncResizeBuffers = HRESULT(APIENTRY *)(IDXGISwapChain *p_this, UINT BufferCount, UINT width, UINT height,
+                                              DXGI_FORMAT new_format, UINT swap_chain_flags);
+using FuncSetFullscreenState = HRESULT(APIENTRY *)(IDXGISwapChain *p_this, BOOL full_screen, IDXGIOutput *p_target);
 
 class D3d11Hook {
 public:
@@ -23,10 +23,14 @@ public:
     static FuncSetFullscreenState vfun_set_fullscreen_state_;
 
     static void StartHook();
+
     static void EndHook();
-    
+
     static void HookWndProc();
+
     static void UnhookWndProc();
+
+    static void GetDeviceAndContext(IDXGISwapChain *swap_chain);
 
 
 private:
@@ -34,6 +38,11 @@ private:
     static long window_height_;
 
     static LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+    static HRESULT APIENTRY HookedResizeBuffers(IDXGISwapChain *p_this, UINT buffer_count, UINT width, UINT height,
+                                                DXGI_FORMAT new_format, UINT swap_chain_flags);
+
+    static HRESULT APIENTRY HookedSetFullscreenState(IDXGISwapChain *p_this, BOOL full_screen, IDXGIOutput *p_target);
 };
 
 

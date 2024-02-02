@@ -10,7 +10,7 @@ file(GLOB_RECURSE IMGUI_SOURCE_FILES "lib/*.cpp")
 include_directories("include")
 include_directories(${CMAKE_SOURCE_DIR}/win32_helper/include)
 
-add_executable(${PROJECT_NAME} ${IMGUI_SOURCE_FILES} ${SOURCE_FILES})
+add_library(${PROJECT_NAME} SHARED ${IMGUI_SOURCE_FILES} ${SOURCE_FILES})
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "include/pch.h")
 target_include_directories(${PROJECT_NAME} PRIVATE ${DETOURS_INCLUDE_DIRS})

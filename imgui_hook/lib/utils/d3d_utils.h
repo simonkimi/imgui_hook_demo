@@ -14,4 +14,4 @@
 void DxTrace(HRESULT hresult);
 
 
-bool GetDx11VTable(HWND hwnd, void **v_table, int size);
+void GetDx11VTable(HWND hwnd, void **v_table, int size);

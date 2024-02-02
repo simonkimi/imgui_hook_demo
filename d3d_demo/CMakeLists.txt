@@ -1,7 +1,5 @@
 project("d3d_demo")
 
-find_package(effects11 CONFIG REQUIRED)
-
 include_directories("include")
 
 file(GLOB_RECURSE SOURCE_FILES "include/*.h" "src/*.h" "src/*.cpp")
