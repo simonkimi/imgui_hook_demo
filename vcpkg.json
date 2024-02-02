@@ -7,5 +7,11 @@
   }, {
     "name" : "imgui",
     "version>=" : "1.90#3"
+  }, {
+    "name" : "spdlog",
+    "version>=" : "1.13.0"
+  }, {
+    "name" : "fmt",
+    "version>=" : "10.2.1"
   } ]
 }

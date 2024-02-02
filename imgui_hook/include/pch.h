@@ -8,5 +8,6 @@
 #include <comdef.h>
 #include <iostream>
 #include <wrl/client.h>
+#include "spdlog/spdlog.h"
 
 using Microsoft::WRL::ComPtr;

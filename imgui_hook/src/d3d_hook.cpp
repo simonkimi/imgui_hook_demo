@@ -44,9 +44,10 @@ LRESULT D3d11Hook::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 void D3d11Hook::StartHook()
 {
+    SPDLOG_INFO("D3d11Hook::StartHook()");
     h_wnd_ = win32::GetProcessWindow();
     if (!h_wnd_) {
-        std::cerr << "Failed to get process window" << std::endl;
+        SPDLOG_ERROR("Failed to get process window");
         return;
     }
 
@@ -70,6 +71,7 @@ void D3d11Hook::StartHook()
 
 void D3d11Hook::EndHook()
 {
+    SPDLOG_INFO("D3d11Hook::EndHook()");
     if (ImguiDrawer::is_initialized_) {
         UnhookWndProc();
         ImguiDrawer::is_initialized_ = false;
@@ -107,6 +109,7 @@ void D3d11Hook::GetDeviceAndContext(IDXGISwapChain *swap_chain)
 HRESULT D3d11Hook::HookedResizeBuffers(IDXGISwapChain *p_this, UINT buffer_count, UINT width, UINT height,
                                        DXGI_FORMAT new_format, UINT swap_chain_flags)
 {
+    SPDLOG_INFO("D3d11Hook::HookedResizeBuffers()");
     ImguiDrawer::need_set_pos_ = true;
     UnhookWndProc();
     if (ImguiDrawer::is_initialized_) {
@@ -125,6 +128,7 @@ HRESULT D3d11Hook::HookedResizeBuffers(IDXGISwapChain *p_this, UINT buffer_count
 
 HRESULT D3d11Hook::HookedSetFullscreenState(IDXGISwapChain *p_this, BOOL full_screen, IDXGIOutput *p_target)
 {
+    SPDLOG_INFO("D3d11Hook::HookedSetFullscreenState()");
     ImguiDrawer::need_set_pos_ = true;
     UnhookWndProc();
     if (ImguiDrawer::is_initialized_) {

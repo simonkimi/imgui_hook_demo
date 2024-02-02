@@ -3,6 +3,8 @@ project("imgui_hook")
 find_package(imgui CONFIG REQUIRED)
 find_path(DETOURS_INCLUDE_DIRS "detours/detours.h")
 find_library(DETOURS_LIBRARY detours REQUIRED)
+find_package(spdlog CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
 
 file(GLOB_RECURSE SOURCE_FILES "include/*.h" "src/*.cpp")
 file(GLOB_RECURSE IMGUI_SOURCE_FILES "lib/*.cpp")
@@ -23,5 +25,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         dxguid dwmapi
         win32_helper
         ${DETOURS_LIBRARY}
+        fmt::fmt-header-only
+        spdlog::spdlog_header_only
 )
 

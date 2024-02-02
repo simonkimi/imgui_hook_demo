@@ -11,6 +11,7 @@ ImVec2 ImguiDrawer::window_pos_ = {0, 0};
 
 void ImguiDrawer::InitImgui(IDXGISwapChain *swap_chain)
 {
+    SPDLOG_INFO("ImguiDrawer::InitImgui()");
     D3d11Hook::HookWndProc();
     ImGui::CreateContext();
     ImGuiIO &io = ImGui::GetIO();
