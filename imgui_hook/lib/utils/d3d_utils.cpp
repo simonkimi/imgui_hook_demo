@@ -1,5 +1,7 @@
 #include "d3d_utils.h"
 #include <sstream>
+#include <iostream>
+#include <d3d11.h>
 
 void DxTrace(HRESULT hresult)
 {

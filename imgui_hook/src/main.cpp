@@ -1,7 +1,7 @@
 #include <pch.h>
-#include "d3d_hook.h"
 #include "logger/logger.h"
 #include <spdlog/sinks/stdout_color_sinks.h>
+#include "imgui/imgui_d311_impl.h"
 
 
 void OnProcessAttach();
@@ -29,12 +29,12 @@ BOOL WINAPI DllMain(HINSTANCE h_instance, DWORD fdw_reason, LPVOID lpv_reserved)
 
 void OnProcessAttach()
 {
-    CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE) D3d11Hook::StartHook, nullptr, 0, nullptr);
+    CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE) ImguiD311Impl::StartHook, nullptr, 0, nullptr);
 }
 
 void OnProcessDetach()
 {
-    D3d11Hook::EndHook();
+    ImguiD311Impl::EndHook();
 }
 
 void InitLogger()
