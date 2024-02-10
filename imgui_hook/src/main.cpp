@@ -3,11 +3,11 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 #ifdef RENDER_API_OPENGL
-#include "../imgui/impl/imgui_opengl_impl.h"
+#include "hook/hook_opengl_impl.h"
 #endif
 
 #ifdef RENDER_API_DX11
-#include "imgui/imgui_d311_impl.h"
+#include "hook/hook_dx11_impl.h"
 #endif
 
 

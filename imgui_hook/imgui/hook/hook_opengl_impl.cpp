@@ -1,4 +1,4 @@
-#include "imgui_opengl_impl.h"
+#include "hook_opengl_impl.h"
 #include "process_helper.h"
 #include "backends/imgui_impl_win32.h"
 #include "backends/imgui_impl_opengl3.h"
@@ -11,6 +11,7 @@ bool ImGuiOpenGLImpl::is_opengl2_ = false;
 
 void ImGuiOpenGLImpl::StartHook()
 {
+    SPDLOG_INFO("ImGuiOpenGLImpl::StartHook()");
     HMODULE h_module = GetModuleHandle(L"opengl32.dll");
     if (!h_module) {
         SPDLOG_ERROR("Failed to get opengl32.dll");
@@ -31,6 +32,7 @@ void ImGuiOpenGLImpl::StartHook()
 
 void ImGuiOpenGLImpl::EndHook()
 {
+    SPDLOG_INFO("ImGuiOpenGLImpl::EndHook()");
     if (is_initialized_) {
         is_initialized_ = false;
         UnhookWndProc();
@@ -47,29 +49,38 @@ void ImGuiOpenGLImpl::EndHook()
 
 void ImGuiOpenGLImpl::InitImgui()
 {
-    SPDLOG_INFO("ImGuiOpenGLImpl::InitImgui()");
+    __try
+    {
+        SPDLOG_INFO("ImGuiOpenGLImpl::InitImgui()");
 
-    // 判断opengl版本
-    GLint major, minor;
-    glGetIntegerv(GL_MAJOR_VERSION, &major);
-    glGetIntegerv(GL_MINOR_VERSION, &minor);
-    SPDLOG_INFO("OpenGL Version: {}.{}", major, minor);
-    is_opengl2_ = major * 10 + minor < 32;
-    HookWndProc();
+        // 判断opengl版本
+//        GLint major, minor;
+//        glGetIntegerv(GL_MAJOR_VERSION, &major);
+//        glGetIntegerv(GL_MINOR_VERSION, &minor);
+//        SPDLOG_INFO("OpenGL Version: {}.{}", major, minor);
+//        is_opengl2_ = major * 10 + minor < 32;
+        is_opengl2_ = false;
 
-    ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
-    (void) io;
-    io.IniFilename = nullptr;
-    io.Fonts->AddFontFromFileTTF(R"(c:\Windows\Fonts\msyh.ttc)", 18.0f, nullptr, io.Fonts->GetGlyphRangesChineseFull());
-    ImGui_ImplWin32_InitForOpenGL(hwnd_);
-    if (is_opengl2_) {
-        ImGui_ImplOpenGL2_Init();
-    } else {
-        ImGui_ImplOpenGL3_Init();
+        ImGui::CreateContext();
+        ImGuiIO &io = ImGui::GetIO();
+        (void) io;
+        io.IniFilename = nullptr;
+        io.Fonts->AddFontFromFileTTF(R"(c:\Windows\Fonts\msyh.ttc)", 18.0f, nullptr,
+                                     io.Fonts->GetGlyphRangesChineseFull());
+        ImGui_ImplWin32_InitForOpenGL(hwnd_);
+        if (is_opengl2_) {
+            ImGui_ImplOpenGL2_Init();
+        } else {
+            ImGui_ImplOpenGL3_Init();
+        }
+
+        HookWndProc();
+        is_initialized_ = true;
     }
-
-    is_initialized_ = true;
+    __except(EXCEPTION_EXECUTE_HANDLER)
+    {
+        SPDLOG_ERROR("Failed to init imgui, exception code: {:#x}", GetExceptionCode());
+    }
 }
 
 BOOL ImGuiOpenGLImpl::HookWglSwapBuffer(HDC hdc)

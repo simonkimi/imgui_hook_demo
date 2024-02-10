@@ -14,7 +14,7 @@ private:
     static bool is_opengl2_;
 
 public:
-    static void StartHook();
+    static void CALLBACK StartHook();
 
     static void EndHook();
     
