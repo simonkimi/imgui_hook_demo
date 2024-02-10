@@ -1,7 +1,7 @@
 #include "process_helper.h"
 #include <psapi.h>
+#include "raii.h"
 
-import raii;
 
 DWORD win32::FindProcessById(LPCTSTR process_name)
 {
@@ -178,7 +178,7 @@ bool win32::CrtFreeDll(DWORD pid, LPCTSTR dll_path)
     return true;
 }
 
-BOOL EnumWindowsProc(HWND hwnd, LPARAM lParam)
+BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam)
 {
     DWORD lpdwProcessId;
     GetWindowThreadProcessId(hwnd, &lpdwProcessId);
