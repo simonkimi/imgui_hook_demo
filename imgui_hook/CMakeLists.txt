@@ -18,7 +18,7 @@ add_library(${PROJECT_NAME} SHARED ${LIB_FILES} ${SOURCE_FILES} ${IMGUI_WIN32_IM
 
 
 set(RENDER_API "OpenGL" CACHE STRING "Select the rendering API")
-set_property(CACHE RENDER_API PROPERTY STRINGS "OpenGL" "DX11")
+set_property(CACHE RENDER_API PROPERTY STRINGS "OpenGL" "DX11" "DX9")
 
 
 file(GLOB_RECURSE IMGUI_WIN32_IMPL "imgui/backends/*win32*.cpp" , "imgui/backends/*win32*.h")
@@ -31,11 +31,19 @@ if (RENDER_API STREQUAL "OpenGL")
     target_compile_definitions(${PROJECT_NAME} PRIVATE RENDER_API_OPENGL)
     target_link_libraries(${PROJECT_NAME} PRIVATE OpenGL::GL)
 elseif (RENDER_API STREQUAL "DX11")
-    file(GLOB_RECURSE DX11_FILES "imgui/backends/*dx11*.cpp" "imgui/backends/*dx11*.h")
+    file(GLOB_RECURSE DX11_FILES "imgui/backends/*dx11*.cpp" "imgui/backends/*dx11*.h" "imgui/utils/*dx*.*")
     file(GLOB_RECURSE DX11_IMPL_FILES "imgui/hook/*dx11*.cpp" "imgui/hook/*dx11*.h")
     target_sources(${PROJECT_NAME} PRIVATE ${DX11_FILES} ${DX11_IMPL_FILES})
     target_compile_definitions(${PROJECT_NAME} PRIVATE RENDER_API_DX11)
     target_link_libraries(${PROJECT_NAME} PRIVATE d3d11 d3dcompiler dxguid dwmapi)
+elseif (RENDER_API STREQUAL "DX9")
+    file(GLOB_RECURSE DX9_FILES "imgui/backends/*dx9*.cpp" "imgui/backends/*dx9*.h" "imgui/utils/*dx*.*")
+    file(GLOB_RECURSE DX9_IMPL_FILES "imgui/hook/*dx9*.cpp" "imgui/hook/*dx9*.h")
+    target_sources(${PROJECT_NAME} PRIVATE ${DX9_FILES} ${DX9_IMPL_FILES})
+    target_compile_definitions(${PROJECT_NAME} PRIVATE RENDER_API_DX9)
+    target_link_libraries(${PROJECT_NAME} PRIVATE d3d9 d3dcompiler dxguid dwmapi)
+else ()
+    message(FATAL_ERROR "Invalid RENDER_API: ${RENDER_API}")
 endif ()
 
 target_precompile_headers(${PROJECT_NAME} PRIVATE "include/pch.h")

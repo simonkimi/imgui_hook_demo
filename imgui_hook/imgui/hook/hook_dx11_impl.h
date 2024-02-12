@@ -3,10 +3,7 @@
 #include "pch.h"
 #include "imgui_core.h"
 #include "d3d11.h"
-
-#ifndef HR
-#define HR(x) { HRESULT hr = (x); if (FAILED(hr)) { DxTrace(hr); } }
-#endif
+#include "utils/dx_utils.h"
 
 using FuncPresent = HRESULT(APIENTRY *)(IDXGISwapChain *p_this, UINT sync_interval, UINT flag);
 using FuncResizeBuffers = HRESULT(APIENTRY *)(IDXGISwapChain *p_this, UINT BufferCount, UINT width, UINT height,

@@ -1,7 +1,6 @@
 #include "backends/imgui_impl_win32.h"
 #include "backends/imgui_impl_dx11.h"
 #include "process_helper.h"
-#include <utils/d3d_utils.h>
 #include "hook_dx11_impl.h"
 #include "detours/detours.h"
 
@@ -150,8 +149,8 @@ void GetDx11VTable(HWND hwnd, void **v_table, int size)
     sd.Windowed = (GetWindowLongPtr(sd.OutputWindow, GWL_STYLE) & WS_POPUP) == 0;
     sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-    ComPtr<ID3D11Device> d3d_device;
-    ComPtr<IDXGISwapChain> d3d_swap_chain;
+    Microsoft::WRL::ComPtr<ID3D11Device> d3d_device;
+    Microsoft::WRL::ComPtr<IDXGISwapChain> d3d_swap_chain;
 
     HRESULT hresult = D3D11CreateDeviceAndSwapChain(
             nullptr,
